@@ -105,16 +105,16 @@
   },
   "home": {
     "hero": {
-      "badge": "#1 Platform for Exclusive Content",
-      "title1": "Create Your",
-      "title2": "Exclusive Club",
-      "subtitle": "The complete platform to create, manage, and monetize exclusive content for your members",
-      "getStarted": "Get Started",
-      "accessContent": "Access Content",
-      "watchDemo": "Watch Demo",
-      "activeMembers": "active members",
-      "rating": "4.9/5"
-    },
+  "badge": "Access exclusive content now",
+  "title1": "Access and manage",
+  "title2": "your exclusive content",
+  "subtitle": "Sign in, choose your plan and access premium content, VIP events and an exclusive community.",
+  "getStarted": "Get Started",
+  "accessContent": "Access Content",
+  "watchDemo": "Watch Demo",
+  "activeMembers": "active members",
+  "rating": "4.9/5"
+  };
     "stats": {
       "activeMembers": "Active Members",
       "satisfaction": "Customer Satisfaction",
