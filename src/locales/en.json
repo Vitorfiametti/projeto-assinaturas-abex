@@ -9,8 +9,8 @@
     "admin": "Admin",
     "signOut": "Sign Out"
   },
-  "loading": "Loading...",
-  "user": "User",
+  "loading": "Please wait...",
+  "user": "Member",
   "language": {
     "portuguese": "🇧🇷 Portuguese",
     "english": "🇺🇸 English",
@@ -44,12 +44,12 @@
     }
   },
   "planCard": {
-    "perMonth": "/month",
-    "perYear": "/year",
-    "freeDays": "days free",
-    "currentPlan": "Current Plan",
-    "selectPlan": "Select Plan"
-  },
+  "perMonth": "/month",
+  "perYear": "/year",
+  "freeDays": "free days",
+  "currentPlan": "Current Plan",
+  "selectPlan": "Choose Plan"
+},
   "signin": {
     "badge": "Exclusive Access",
     "title": "Welcome back!",
