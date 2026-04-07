@@ -98,16 +98,16 @@
   },
   "home": {
     "hero": {
-      "badge": "#1 Plataforma de Conteúdo Exclusivo",
-      "title1": "Crie Seu",
-      "title2": "Clube Exclusivo",
-      "subtitle": "A plataforma completa para criar, gerenciar e monetizar conteúdo exclusivo para seus membros",
-      "getStarted": "Começar Agora",
-      "accessContent": "Acessar Conteúdo",
-      "watchDemo": "Ver Demonstração",
-      "activeMembers": "membros ativos",
-      "rating": "4.9/5"
-    },
+  "badge": "Acesse conteúdo exclusivo agora",
+  "title1": "Acesse e gerencie",
+  "title2": "seu conteúdo exclusivo",
+  "subtitle": "Faça login, escolha seu plano e acesse conteúdos premium, eventos VIP e uma comunidade exclusiva.",
+  "getStarted": "Começar Agora",
+  "accessContent": "Acessar Conteúdo",
+  "watchDemo": "Ver Demonstração",
+  "activeMembers": "membros ativos",
+  "rating": "4.9/5"
+},
     "stats": {
       "activeMembers": "Membros Ativos",
       "satisfaction": "Satisfação dos Clientes",
