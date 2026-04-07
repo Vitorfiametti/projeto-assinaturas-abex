@@ -105,16 +105,16 @@
   },
   "home": {
     "hero": {
-      "badge": "#1 Plataforma de Contenido Exclusivo",
-      "title1": "Crea Tu",
-      "title2": "Club Exclusivo",
-      "subtitle": "La plataforma completa para crear, gestionar y monetizar contenido exclusivo para tus miembros",
-      "getStarted": "Comenzar Ahora",
-      "accessContent": "Acceder al Contenido",
-      "watchDemo": "Ver Demostración",
-      "activeMembers": "miembros activos",
-      "rating": "4.9/5"
-    },
+  "badge": "Accede a contenido exclusivo ahora",
+  "title1": "Accede y gestiona",
+  "title2": "tu contenido exclusivo",
+  "subtitle": "Inicia sesión, elige tu plan y accede a contenido premium, eventos VIP y una comunidad exclusiva.",
+  "getStarted": "Comenzar Ahora",
+  "accessContent": "Acceder al Contenido",
+  "watchDemo": "Ver Demostración",
+  "activeMembers": "miembros activos",
+  "rating": "4.9/5"
+},
     "stats": {
       "activeMembers": "Miembros Activos",
       "satisfaction": "Satisfacción del Cliente",
