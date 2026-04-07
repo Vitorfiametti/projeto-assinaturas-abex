@@ -69,8 +69,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700/50 bg-slate-900/50">
           <div>
-            <h2 className="text-3xl font-bold text-white mb-2">Escolha seu Plano</h2>
-            <p className="text-slate-400 mt-1">Selecione o plano ideal para você</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Escolher Plano</h2>
+            <p className="text-slate-400 mt-1">Selecione um plano para continuar</p>
           </div>
           <button
             onClick={onClose}
@@ -145,7 +145,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <h3 className="text-sm font-medium text-red-400">Erro no pagamento</h3>
+                  <h3 className="text-sm font-medium text-red-400">Erro ao processar</h3>
                   <p className="text-sm text-red-300 mt-1">{error}</p>
                 </div>
               </div>
@@ -160,7 +160,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
               <div>
                 <h3 className="font-semibold text-white text-lg">{selectedPlan.name}</h3>
                 <p className="text-sm text-slate-400">
-                  Cobrança {billing === 'annual' ? 'anual' : 'mensal'}
+                Faturamento {billing === 'annual' ? 'anual' : 'mensal'}
                 </p>
               </div>
               <div className="flex items-center gap-4">
