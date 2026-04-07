@@ -94,7 +94,7 @@ export default function PlansPage({ plans, currentPlanId }: PlansPageProps) {
                   billing={billing}
                   currentPlanId={currentPlanId}
                   onSelect={handleSelect}
-                  isPopular={index === 1}
+                  isPopular={index === 0}
                 />
               ))}
             </div>
@@ -157,9 +157,9 @@ export async function getServerSideProps(context: any) {
     await connectMongoose();
     
     const plansFromDb = await Plan.find({ isActive: true })
-      .sort({ monthlyPrice: 1 })
-      .lean()
-      .exec();
+    .sort({ monthlyPrice: -1 })
+    .lean()
+    .exec();
     
     const serializedPlans = JSON.parse(JSON.stringify(plansFromDb));
 
