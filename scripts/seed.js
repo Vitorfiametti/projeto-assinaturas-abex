@@ -58,6 +58,17 @@ const paymentSchema = new mongoose.Schema({
   ownerEmail: String,
 }, { timestamps: true });
 
+const eventSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  date: Date,
+  location: String,
+  region: String,
+  restricted: { type: Boolean, default: false },
+  planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan", default: null },
+  imageUrl: String,
+}, { timestamps: true });
+
 const subscriptionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan" },
@@ -71,6 +82,7 @@ const Plan = mongoose.models.Plan || mongoose.model("Plan", planSchema);
 const Content = mongoose.models.Content || mongoose.model("Content", contentSchema);
 const Payment = mongoose.models.Payment || mongoose.model("Payment", paymentSchema);
 const Subscription = mongoose.models.Subscription || mongoose.model("Subscription", subscriptionSchema);
+const Event = mongoose.models.Event || mongoose.model("Event", eventSchema);
 
 async function main() {
   console.log("🔌 Conectando ao Mongo:", MONGODB_URI);
@@ -85,6 +97,7 @@ async function main() {
       Content.deleteMany({}),
       Payment.deleteMany({}),
       Subscription.deleteMany({}),
+      Event.deleteMany({}),
     ]);
 
     console.log("🌱 Inserindo dados de teste...");
@@ -187,6 +200,52 @@ async function main() {
       ownerEmail: admin.email,
     });
 
+    // eventos de teste distribuídos por região
+    const baseDate = new Date();
+    const events = await Event.insertMany([
+      {
+        title: "Churrasco da Atlética",
+        description: "Evento aberto para todos os membros.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 10, 18, 0),
+        location: "Sede da Atlética",
+        region: "Sul",
+        restricted: false,
+      },
+      {
+        title: "Torneio de Futsal",
+        description: "Competição interna entre cursos.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 15, 14, 0),
+        location: "Ginásio Central",
+        region: "Sul",
+        restricted: false,
+      },
+      {
+        title: "Workshop de Empreendedorismo",
+        description: "Evento exclusivo para assinantes.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 20, 9, 0),
+        location: "Auditório Bloco A",
+        region: "Sudeste",
+        restricted: true,
+        planId: planTiny._id,
+      },
+      {
+        title: "Festa Junina Universitária",
+        description: "Quadrilha, comidas típicas e muito mais.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 24, 20, 0),
+        location: "Pátio Central",
+        region: "Nordeste",
+        restricted: false,
+      },
+      {
+        title: "Semana Acadêmica",
+        description: "Palestras e minicursos durante toda a semana.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 28, 8, 0),
+        location: "Campus Norte",
+        region: "Centro-Oeste",
+        restricted: false,
+      },
+    ]);
+
     console.log("✅ Seed completo!");
     console.log({
       admin: { id: admin._id, email: admin.email },
@@ -202,6 +261,7 @@ async function main() {
         { id: publicContent._id, title: publicContent.title },
         { id: restrictedContent._id, title: restrictedContent.title }
       ],
+      events: events.map(e => ({ id: e._id, title: e.title, region: e.region, date: e.date })),
       payments: [
         { id: payment1._id, mercadoPagoId: payment1.mercadoPagoId, amount: payment1.amount, status: payment1.status },
         { id: payment2._id, mercadoPagoId: payment2.mercadoPagoId, amount: payment2.amount, status: payment2.status }

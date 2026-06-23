@@ -17,7 +17,8 @@ import {
   Shield,
   ChevronDown,
   Globe,
-  DollarSign // ✨ NOVO ÍCONE
+  DollarSign, // ✨ NOVO ÍCONE
+  CalendarDays
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -336,6 +337,11 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab }) => {
                     <FileText className="w-4 h-4" />
                     {t('navbar.content')}
                   </Link>
+
+                  <Link href="/member/events" className={getLinkClasses('events', '/member/events')}>
+                    <CalendarDays className="w-4 h-4" />
+                    {t('navbar.events')}
+                  </Link>
                 </>
               )}
 
@@ -493,6 +499,15 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab }) => {
                   >
                     <FileText className="w-5 h-5" />
                     {t('navbar.content')}
+                  </Link>
+
+                  <Link
+                    href="/member/events"
+                    className={getMobileLinkClasses('events', '/member/events')}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <CalendarDays className="w-5 h-5" />
+                    {t('navbar.events')}
                   </Link>
                 </>
               )}

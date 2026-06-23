@@ -7,7 +7,8 @@
     "content": "Contenido",
     "settings": "Configuración",
     "admin": "Administrador",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "events": "Eventos"
   },
   "loading": "Por favor espera...",
   "user": "Miembro",
@@ -44,12 +45,12 @@
     }
   },
   "planCard": {
-  "perMonth": "/mes",
-  "perYear": "/año",
-  "freeDays": "días gratis",
-  "currentPlan": "Plan Actual",
-  "selectPlan": "Elegir Plan"
-},
+    "perMonth": "/mes",
+    "perYear": "/año",
+    "freeDays": "días gratis",
+    "currentPlan": "Plan Actual",
+    "selectPlan": "Elegir Plan"
+  },
   "signin": {
     "badge": "Acceso Exclusivo",
     "title": "¡Bienvenido de nuevo!",
@@ -105,16 +106,16 @@
   },
   "home": {
     "hero": {
-  "badge": "Accede a contenido exclusivo ahora",
-  "title1": "Accede y gestiona",
-  "title2": "tu contenido exclusivo",
-  "subtitle": "Inicia sesión, elige tu plan y accede a contenido premium, eventos VIP y una comunidad exclusiva.",
-  "getStarted": "Comenzar Ahora",
-  "accessContent": "Acceder al Contenido",
-  "watchDemo": "Ver Demostración",
-  "activeMembers": "miembros activos",
-  "rating": "4.9/5"
-},
+      "badge": "Accede a contenido exclusivo ahora",
+      "title1": "Accede y gestiona",
+      "title2": "tu contenido exclusivo",
+      "subtitle": "Inicia sesión, elige tu plan y accede a contenido premium, eventos VIP y una comunidad exclusiva.",
+      "getStarted": "Comenzar Ahora",
+      "accessContent": "Acceder al Contenido",
+      "watchDemo": "Ver Demostración",
+      "activeMembers": "miembros activos",
+      "rating": "4.9/5"
+    },
     "stats": {
       "activeMembers": "Miembros Activos",
       "satisfaction": "Satisfacción del Cliente",
@@ -265,41 +266,41 @@
         "description": "Diseño intuitivo y fácil de navegar"
       }
     },
-"testimonials": {
-  "title": "Lo Que Nuestros",
-  "title2": "Miembros Dicen",
-  "subtitle": "Descubre cómo nuestra plataforma ha transformado negocios y carreras en todo el mundo",
-  "testimonial1": {
-    "name": "María Silva",
-    "role": "Directora de Marketing",
-    "content": "El contenido exclusivo transformó cómo abordo mis estrategias comerciales. ¡Valor increíble!"
-  },
-  "testimonial2": {
-    "name": "Juan Pérez",
-    "role": "Emprendedor",
-    "content": "La comunidad VIP abrió puertas que nunca imaginé. El networking por sí solo vale la inversión."
-  },
-  "testimonial3": {
-    "name": "Ana Costa",
-    "role": "Consultora de Negocios",
-    "content": "Contenido profesional con aplicabilidad práctica. Lo recomiendo a todos mis clientes."
-  },
-  "testimonial4": {
-    "name": "Roberto Fernández",
-    "role": "Emprendedor Digital",
-    "content": "La calidad del contenido es excepcional. He implementado varias estrategias que aprendí y ya veo resultados concretos en mi negocio."
-  },
-  "testimonial5": {
-    "name": "Lucía Castro",
-    "role": "Consultora de Marketing",
-    "content": "¡El networking aquí es increíble! Conocí profesionales increíbles y formamos asociaciones valiosas. Vale cada centavo invertido."
-  },
-  "testimonial6": {
-    "name": "Pablo Méndez",
-    "role": "Diseñador Freelancer",
-    "content": "Excelente plataforma con mucho contenido relevante. Los cursos están bien estructurados y el soporte siempre es rápido."
-  }
-},
+    "testimonials": {
+      "title": "Lo Que Nuestros",
+      "title2": "Miembros Dicen",
+      "subtitle": "Descubre cómo nuestra plataforma ha transformado negocios y carreras en todo el mundo",
+      "testimonial1": {
+        "name": "María Silva",
+        "role": "Directora de Marketing",
+        "content": "El contenido exclusivo transformó cómo abordo mis estrategias comerciales. ¡Valor increíble!"
+      },
+      "testimonial2": {
+        "name": "Juan Pérez",
+        "role": "Emprendedor",
+        "content": "La comunidad VIP abrió puertas que nunca imaginé. El networking por sí solo vale la inversión."
+      },
+      "testimonial3": {
+        "name": "Ana Costa",
+        "role": "Consultora de Negocios",
+        "content": "Contenido profesional con aplicabilidad práctica. Lo recomiendo a todos mis clientes."
+      },
+      "testimonial4": {
+        "name": "Roberto Fernández",
+        "role": "Emprendedor Digital",
+        "content": "La calidad del contenido es excepcional. He implementado varias estrategias que aprendí y ya veo resultados concretos en mi negocio."
+      },
+      "testimonial5": {
+        "name": "Lucía Castro",
+        "role": "Consultora de Marketing",
+        "content": "¡El networking aquí es increíble! Conocí profesionales increíbles y formamos asociaciones valiosas. Vale cada centavo invertido."
+      },
+      "testimonial6": {
+        "name": "Pablo Méndez",
+        "role": "Diseñador Freelancer",
+        "content": "Excelente plataforma con mucho contenido relevante. Los cursos están bien estructurados y el soporte siempre es rápido."
+      }
+    },
     "footer": {
       "description": "La plataforma completa para crear y gestionar clubes de miembros exclusivos",
       "navigation": "Navegación",
