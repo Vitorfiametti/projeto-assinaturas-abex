@@ -325,6 +325,10 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab }) => {
                         <FileText className="w-4 h-4" />
                         {t('navbar.content')}
                       </Link>
+                      <Link href="/admin/events" className={getLinkClasses('admin-events', '/admin/events')}>
+                        <CalendarDays className="w-4 h-4" />
+                        {t('navbar.events')}
+                      </Link>
                     </div>
                   )}
 
@@ -479,6 +483,14 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab }) => {
                       >
                         <FileText className="w-5 h-5" />
                         {t('navbar.content')}
+                      </Link>
+                      <Link
+                        href="/admin/events"
+                        className={getMobileLinkClasses('admin-events', '/admin/events')}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <CalendarDays className="w-5 h-5" />
+                        {t('navbar.events')}
                       </Link>
                     </>
                   )}
