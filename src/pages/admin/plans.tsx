@@ -29,7 +29,7 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingPlanId, setEditingPlanId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -39,7 +39,7 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
     trialDays: '0',
     isActive: true,
   });
-  
+
   const [features, setFeatures] = useState<string[]>(['']);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -147,7 +147,7 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
         }
 
         setSuccess('Plano atualizado com sucesso!');
-        
+
         // Atualizar lista de planos
         setPlansList(plansList.map(p => p._id === editingPlanId ? data.plan : p));
       } else {
@@ -169,7 +169,7 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
         }
 
         setSuccess('Plano criado com sucesso!');
-        
+
         // Adicionar à lista de planos
         setPlansList([...plansList, data.plan]);
       }
@@ -207,152 +207,191 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '8px 16px',
+    backgroundColor: 'var(--bg)',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
+    color: 'var(--text)',
+    outline: 'none',
+    boxSizing: 'border-box',
+  };
+
   return (
     <Layout activeTab="admin-plans">
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          
-          <div className="flex items-center justify-between">
+      <div style={{ backgroundColor: 'var(--bg)', minHeight: '100vh', padding: '24px' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">
+              <h1 style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
                 Gerenciar Planos
               </h1>
-              <p className="text-slate-400">
+              <p style={{ color: 'var(--text-muted)' }}>
                 Crie e edite os planos de assinatura da plataforma
               </p>
             </div>
-            <button 
+            <button
               onClick={handleOpenCreateModal}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: 'var(--accent)',
+                color: '#ffffff',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 500,
+              }}
             >
-              <Plus className="w-4 h-4" />
+              <Plus style={{ width: '16px', height: '16px' }} />
               Novo Plano
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <Crown className="w-6 h-6 text-white" />
+          {/* Stat Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: 'var(--accent)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Crown style={{ width: '24px', height: '24px', color: '#ffffff' }} />
                 </div>
               </div>
-              <p className="text-slate-400 text-sm mb-1">Total de Planos</p>
-              <p className="text-2xl font-bold text-white">{plansList.length}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '4px' }}>Total de Planos</p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>{plansList.length}</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-white" />
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: '#10b981', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <DollarSign style={{ width: '24px', height: '24px', color: '#ffffff' }} />
                 </div>
               </div>
-              <p className="text-slate-400 text-sm mb-1">Planos Ativos</p>
-              <p className="text-2xl font-bold text-white">
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '4px' }}>Planos Ativos</p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>
                 {plansList.filter(p => p.isActive).length}
               </p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                  <Users className="w-6 h-6 text-white" />
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: 'var(--teal)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Users style={{ width: '24px', height: '24px', color: '#ffffff' }} />
                 </div>
               </div>
-              <p className="text-slate-400 text-sm mb-1">Assinantes</p>
-              <p className="text-2xl font-bold text-white">0</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '4px' }}>Assinantes</p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>0</p>
             </div>
           </div>
 
+          {/* Plans List / Empty State */}
           {plansList.length === 0 ? (
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-12 text-center">
-              <Crown className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '48px', textAlign: 'center' }}>
+              <Crown style={{ width: '64px', height: '64px', color: 'var(--border)', margin: '0 auto 16px' }} />
+              <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>
                 Nenhum plano cadastrado
               </h3>
-              <p className="text-slate-400 mb-6">
+              <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>
                 Comece criando seu primeiro plano de assinatura
               </p>
-              <button 
+              <button
                 onClick={handleOpenCreateModal}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-semibold transition-all duration-200 hover:scale-105"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '12px 24px',
+                  backgroundColor: 'var(--accent)',
+                  color: '#ffffff',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
               >
-                <Plus className="w-5 h-5" />
+                <Plus style={{ width: '20px', height: '20px' }} />
                 Criar Primeiro Plano
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
               {plansList.map((plan) => (
                 <div
                   key={plan._id}
-                  className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/70 transition-all duration-300"
+                  style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', transition: 'all 0.3s' }}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-white">{plan.name}</h3>
-                    <div className="flex items-center gap-2">
-                      <button 
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text)' }}>{plan.name}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
                         onClick={() => handleOpenEditModal(plan)}
-                        className="p-2 text-blue-400 hover:bg-blue-900/20 rounded-lg transition-colors"
+                        style={{ padding: '8px', color: 'var(--teal)', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '8px' }}
                         title="Editar plano"
                       >
-                        <Edit className="w-4 h-4" />
+                        <Edit style={{ width: '16px', height: '16px' }} />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDelete(plan._id)}
-                        className="p-2 text-red-400 hover:bg-red-900/20 rounded-lg transition-colors"
+                        style={{ padding: '8px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '8px' }}
                         title="Deletar plano"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 style={{ width: '16px', height: '16px' }} />
                       </button>
                     </div>
                   </div>
 
-                  <p className="text-slate-400 text-sm mb-4">{plan.description}</p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '16px' }}>{plan.description}</p>
 
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500 text-sm">Mensal</span>
-                      <span className="text-white font-bold">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Mensal</span>
+                      <span style={{ color: 'var(--text)', fontWeight: 700 }}>
                         R$ {plan.monthlyPrice?.toFixed(2) || '0.00'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500 text-sm">Anual</span>
-                      <span className="text-white font-bold">
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Anual</span>
+                      <span style={{ color: 'var(--text)', fontWeight: 700 }}>
                         R$ {plan.annualPrice?.toFixed(2) || '0.00'}
                       </span>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-700">
-                    <p className="text-slate-400 text-xs mb-2">Features:</p>
-                    <div className="space-y-1">
+                  <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '8px' }}>Features:</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       {(plan.features || []).slice(0, 3).map((feature, index) => (
-                        <p key={index} className="text-slate-300 text-sm">
+                        <p key={index} style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
                           • {feature}
                         </p>
                       ))}
                       {(plan.features || []).length > 3 && (
-                        <p className="text-slate-500 text-sm">
+                        <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
                           +{plan.features.length - 3} mais
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-slate-700 flex items-center justify-between">
+                  <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        plan.isActive
-                          ? 'bg-green-500/20 text-green-400'
-                          : 'bg-red-500/20 text-red-400'
-                      }`}
+                      style={{
+                        padding: '4px 12px',
+                        borderRadius: '9999px',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        backgroundColor: plan.isActive ? 'var(--teal-subtle)' : 'var(--accent-subtle)',
+                        color: plan.isActive ? 'var(--teal)' : 'var(--accent)',
+                      }}
                     >
                       {plan.isActive ? 'Ativo' : 'Inativo'}
                     </span>
                     {plan.trialDays > 0 && (
-                      <span className="text-xs text-slate-400">
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                         {plan.trialDays} dias grátis
                       </span>
                     )}
@@ -366,83 +405,83 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
 
       {/* Modal de Criar/Editar Plano */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-white">
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', zIndex: 50 }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '32px', maxWidth: '672px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>
                 {isEditMode ? 'Editar Plano' : 'Criar Novo Plano'}
               </h3>
-              <button 
+              <button
                 onClick={() => {
                   setIsModalOpen(false);
                   resetForm();
                 }}
-                className="text-slate-400 hover:text-white"
+                style={{ color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                <X className="w-6 h-6" />
+                <X style={{ width: '24px', height: '24px' }} />
               </button>
             </div>
 
             {error && (
-              <div className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400">
+              <div style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--accent-subtle)', border: '1px solid var(--accent)', borderRadius: '8px', color: 'var(--accent)' }}>
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="mb-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 flex items-center gap-2">
-                <Check className="w-5 h-5" />
+              <div style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--teal-subtle)', border: '1px solid var(--teal)', borderRadius: '8px', color: 'var(--teal)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Check style={{ width: '20px', height: '20px' }} />
                 {success}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
                     Nome do Plano *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    style={inputStyle}
                     placeholder="Ex: Premium"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
                     Dias de Trial
                   </label>
                   <input
                     type="number"
                     value={formData.trialDays}
                     onChange={(e) => setFormData({...formData, trialDays: e.target.value})}
-                    className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    style={inputStyle}
                     min="0"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
                   Descrição *
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  style={{ ...inputStyle, resize: 'vertical' }}
                   rows={3}
                   placeholder="Descreva o plano..."
                   required
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
                     Preço Mensal (R$) *
                   </label>
                   <input
@@ -450,14 +489,14 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
                     step="0.01"
                     value={formData.monthlyPrice}
                     onChange={(e) => setFormData({...formData, monthlyPrice: e.target.value})}
-                    className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    style={inputStyle}
                     placeholder="29.00"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
                     Preço Anual (R$) *
                   </label>
                   <input
@@ -465,7 +504,7 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
                     step="0.01"
                     value={formData.annualPrice}
                     onChange={(e) => setFormData({...formData, annualPrice: e.target.value})}
-                    className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    style={inputStyle}
                     placeholder="299.00"
                     required
                   />
@@ -473,26 +512,26 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
                   Features *
                 </label>
-                <div className="space-y-2">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {features.map((feature, index) => (
-                    <div key={index} className="flex gap-2">
+                    <div key={index} style={{ display: 'flex', gap: '8px' }}>
                       <input
                         type="text"
                         value={feature}
                         onChange={(e) => handleFeatureChange(index, e.target.value)}
-                        className="flex-1 px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        style={{ ...inputStyle, flex: 1 }}
                         placeholder="Ex: Acesso a todo conteúdo"
                       />
                       {features.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveFeature(index)}
-                          className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+                          style={{ padding: '8px 12px', backgroundColor: 'var(--accent-subtle)', color: 'var(--accent)', borderRadius: '8px', border: 'none', cursor: 'pointer' }}
                         >
-                          <X className="w-4 h-4" />
+                          <X style={{ width: '16px', height: '16px' }} />
                         </button>
                       )}
                     </div>
@@ -500,41 +539,60 @@ export default function AdminPlansPage({ plans = [] }: AdminPlansPageProps) {
                   <button
                     type="button"
                     onClick={handleAddFeature}
-                    className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                    style={{ background: 'none', border: 'none', color: 'var(--accent)', fontSize: '14px', fontWeight: 500, cursor: 'pointer', textAlign: 'left', padding: 0 }}
                   >
                     + Adicionar Feature
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <input
                   type="checkbox"
                   id="isActive"
                   checked={formData.isActive}
                   onChange={(e) => setFormData({...formData, isActive: e.target.checked})}
-                  className="w-4 h-4 text-purple-600 bg-slate-700 border-slate-600 rounded focus:ring-purple-500"
+                  style={{ width: '16px', height: '16px' }}
                 />
-                <label htmlFor="isActive" className="text-sm text-slate-300">
+                <label htmlFor="isActive" style={{ fontSize: '14px', color: 'var(--text)' }}>
                   Plano ativo
                 </label>
               </div>
 
-              <div className="flex gap-4 pt-6">
+              <div style={{ display: 'flex', gap: '16px', paddingTop: '24px' }}>
                 <button
                   type="button"
                   onClick={() => {
                     setIsModalOpen(false);
                     resetForm();
                   }}
-                  className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                  style={{
+                    flex: 1,
+                    padding: '12px 24px',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text)',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border)',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
                   disabled={loading}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    flex: 1,
+                    padding: '12px 24px',
+                    backgroundColor: 'var(--accent)',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    fontWeight: 500,
+                    opacity: loading ? 0.5 : 1,
+                  }}
                   disabled={loading}
                 >
                   {loading ? (isEditMode ? 'Salvando...' : 'Criando...') : (isEditMode ? 'Salvar Alterações' : 'Criar Plano')}
@@ -572,7 +630,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     await connectMongoose();
-    
+
     const plansFromDb = await Plan.find({}).lean().exec();
     const serializedPlans = JSON.parse(JSON.stringify(plansFromDb));
 
@@ -583,7 +641,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (error) {
     console.error('Error loading plans:', error);
-    
+
     return {
       props: {
         plans: [],

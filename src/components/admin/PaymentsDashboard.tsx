@@ -1,9 +1,9 @@
 // src/components/admin/PaymentsDashboard.tsx
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  DollarSign, 
-  TrendingUp, 
-  CreditCard, 
+import {
+  DollarSign,
+  TrendingUp,
+  CreditCard,
   Users,
   Calendar,
   Filter,
@@ -44,11 +44,11 @@ const PaymentsDashboard = () => {
       try {
         setLoading(true);
         const response = await fetch('/api/admin/payments');
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch payments');
         }
-        
+
         const data = await response.json();
         setPayments(data);
       } catch (error) {
@@ -78,25 +78,25 @@ const PaymentsDashboard = () => {
 
   // Status config
   const statusConfig = {
-    approved: { 
-      label: 'Aprovado', 
-      color: 'text-green-400 bg-green-500/20',
-      icon: CheckCircle 
+    approved: {
+      label: 'Aprovado',
+      color: 'text-green-700 bg-green-100',
+      icon: CheckCircle
     },
-    pending: { 
-      label: 'Pendente', 
-      color: 'text-yellow-400 bg-yellow-500/20',
-      icon: Clock 
+    pending: {
+      label: 'Pendente',
+      color: 'text-yellow-700 bg-yellow-100',
+      icon: Clock
     },
-    failed: { 
-      label: 'Recusado', 
-      color: 'text-red-400 bg-red-500/20',
-      icon: XCircle 
+    failed: {
+      label: 'Recusado',
+      color: 'text-red-700 bg-red-100',
+      icon: XCircle
     },
-    cancelled: { 
-      label: 'Cancelado', 
-      color: 'text-gray-400 bg-gray-500/20',
-      icon: AlertCircle 
+    cancelled: {
+      label: 'Cancelado',
+      color: 'text-gray-600 bg-gray-100',
+      icon: AlertCircle
     }
   };
 
@@ -105,7 +105,7 @@ const PaymentsDashboard = () => {
     let result = [...payments];
 
     if (searchTerm) {
-      result = result.filter(p => 
+      result = result.filter(p =>
         p.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.id.toLowerCase().includes(searchTerm.toLowerCase())
@@ -144,7 +144,7 @@ const PaymentsDashboard = () => {
     const approved = payments.filter(p => p.status === 'approved');
     const approvedTotal = approved.reduce((acc, p) => acc + p.amount, 0);
     const pending = payments.filter(p => p.status === 'pending').length;
-    
+
     return {
       total: total.toFixed(2),
       approvedTotal: approvedTotal.toFixed(2),
@@ -177,7 +177,7 @@ const PaymentsDashboard = () => {
 
     return last7Days.map(date => {
       const dateStr = date.toISOString().split('T')[0];
-      const dayPayments = payments.filter(p => 
+      const dayPayments = payments.filter(p =>
         p.date.startsWith(dateStr) && p.status === 'approved'
       );
       const total = dayPayments.reduce((acc, p) => acc + p.amount, 0);
@@ -193,135 +193,152 @@ const PaymentsDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white text-xl">Carregando...</div>
+      <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: '50%',
+            border: '4px solid #e8192c',
+            borderTopColor: 'transparent',
+            animation: 'spin 0.8s linear infinite'
+          }}
+        />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', padding: 24 }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
+
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 style={{ fontSize: 28, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
               Dashboard de Pagamentos
             </h1>
-            <p className="text-slate-400">
+            <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
               Gerencie e acompanhe todas as transações da plataforma
             </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
-            <Download className="w-4 h-4" />
+          <button style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', backgroundColor: '#e8192c', color: '#ffffff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>
+            <Download style={{ width: 16, height: 16 }} />
             Exportar
           </button>
         </div>
 
         {/* Cards de Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-white" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24 }}>
+          {/* Receita Total */}
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ width: 48, height: 48, backgroundColor: '#10b981', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <DollarSign style={{ width: 24, height: 24, color: '#ffffff' }} />
               </div>
-              <span className="text-green-400 text-sm font-medium">+12.5%</span>
+              <span style={{ color: '#10b981', fontSize: 13, fontWeight: 600 }}>+12.5%</span>
             </div>
-            <p className="text-slate-400 text-sm mb-1">Receita Total</p>
-            <p className="text-2xl font-bold text-white">R$ {stats.approvedTotal}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Receita Total</p>
+            <p style={{ fontSize: 24, fontWeight: 700, color: 'var(--text)' }}>R$ {stats.approvedTotal}</p>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                <CreditCard className="w-6 h-6 text-white" />
+          {/* Transações */}
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ width: 48, height: 48, backgroundColor: '#3b82f6', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CreditCard style={{ width: 24, height: 24, color: '#ffffff' }} />
               </div>
-              <span className="text-blue-400 text-sm font-medium">{stats.approvedCount}</span>
+              <span style={{ color: '#3b82f6', fontSize: 13, fontWeight: 600 }}>{stats.approvedCount}</span>
             </div>
-            <p className="text-slate-400 text-sm mb-1">Transações Aprovadas</p>
-            <p className="text-2xl font-bold text-white">{stats.transactionsCount}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Transações Aprovadas</p>
+            <p style={{ fontSize: 24, fontWeight: 700, color: 'var(--text)' }}>{stats.transactionsCount}</p>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-white" />
+          {/* Ticket Médio */}
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ width: 48, height: 48, backgroundColor: '#00c9b1', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TrendingUp style={{ width: 24, height: 24, color: '#ffffff' }} />
               </div>
-              <span className="text-purple-400 text-sm font-medium">R$ {stats.avgTicket}</span>
+              <span style={{ color: '#00c9b1', fontSize: 13, fontWeight: 600 }}>R$ {stats.avgTicket}</span>
             </div>
-            <p className="text-slate-400 text-sm mb-1">Ticket Médio</p>
-            <p className="text-2xl font-bold text-white">R$ {stats.avgTicket}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Ticket Médio</p>
+            <p style={{ fontSize: 24, fontWeight: 700, color: 'var(--text)' }}>R$ {stats.avgTicket}</p>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-white" />
+          {/* Pendentes */}
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ width: 48, height: 48, backgroundColor: '#f97316', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Clock style={{ width: 24, height: 24, color: '#ffffff' }} />
               </div>
-              <span className="text-yellow-400 text-sm font-medium">{stats.pendingCount}</span>
+              <span style={{ color: '#f97316', fontSize: 13, fontWeight: 600 }}>{stats.pendingCount}</span>
             </div>
-            <p className="text-slate-400 text-sm mb-1">Pendentes</p>
-            <p className="text-2xl font-bold text-white">{stats.pendingCount}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Pendentes</p>
+            <p style={{ fontSize: 24, fontWeight: 700, color: 'var(--text)' }}>{stats.pendingCount}</p>
           </div>
         </div>
 
         {/* Gráfico de Receita */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
             <div>
-              <h2 className="text-xl font-bold text-white mb-1">
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
                 Receita dos Últimos 7 Dias
               </h2>
-              <p className="text-slate-400 text-sm">
+              <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>
                 Acompanhe a evolução diária das suas receitas
               </p>
             </div>
-            <Calendar className="w-5 h-5 text-slate-400" />
+            <Calendar style={{ width: 20, height: 20, color: 'var(--text-muted)' }} />
           </div>
-          
-          <div className="flex items-end justify-between gap-4 h-48">
+
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, height: 192 }}>
             {chartData.map((item, index) => (
-              <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                <div className="relative w-full bg-slate-700/50 rounded-t-lg overflow-hidden group">
-                  <div 
-                    className="bg-gradient-to-t from-purple-600 to-blue-500 rounded-t-lg transition-all duration-500 hover:from-purple-500 hover:to-blue-400"
-                    style={{ 
+              <div key={index} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                <div style={{ position: 'relative', width: '100%', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px 4px 0 0', overflow: 'hidden' }} className="group">
+                  <div
+                    style={{
+                      backgroundColor: '#e8192c',
+                      borderRadius: '4px 4px 0 0',
+                      transition: 'height 0.5s ease',
                       height: `${(item.value / maxValue) * 180}px`,
-                      minHeight: '20px'
+                      minHeight: 20,
+                      position: 'relative'
                     }}
                   >
-                    <div className="absolute inset-0 flex items-start justify-center pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white text-xs font-bold bg-slate-900/80 px-2 py-1 rounded">
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 8, opacity: 0 }} className="group-hover:opacity-100" >
+                      <span style={{ color: 'var(--text)', fontSize: 11, fontWeight: 700, backgroundColor: '#ffffff', padding: '2px 8px', borderRadius: 4, boxShadow: '0 1px 4px rgba(0,0,0,0.12)' }}>
                         R$ {item.value.toFixed(2)}
                       </span>
                     </div>
                   </div>
                 </div>
-                <span className="text-slate-400 text-xs font-medium">{item.date}</span>
+                <span style={{ color: 'var(--text-muted)', fontSize: 11, fontWeight: 500 }}>{item.date}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Filtros e Busca */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+            <div style={{ flex: '1 1 200px', position: 'relative' }}>
+              <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 18, height: 18, color: 'var(--text-muted)' }} />
               <input
                 type="text"
                 placeholder="Buscar por nome, email ou ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                style={{ width: '100%', paddingLeft: 40, paddingRight: 16, paddingTop: 8, paddingBottom: 8, backgroundColor: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ padding: '8px 16px', backgroundColor: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 14, outline: 'none' }}
             >
               <option value="all">Todos os Status</option>
               <option value="approved">Aprovado</option>
@@ -333,7 +350,7 @@ const PaymentsDashboard = () => {
             <select
               value={filterMethod}
               onChange={(e) => setFilterMethod(e.target.value)}
-              className="px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ padding: '8px 16px', backgroundColor: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 14, outline: 'none' }}
             >
               <option value="all">Todos os Métodos</option>
               <option value="Cartão de Crédito">Cartão de Crédito</option>
@@ -344,7 +361,7 @@ const PaymentsDashboard = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ padding: '8px 16px', backgroundColor: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 14, outline: 'none' }}
             >
               <option value="date-desc">Data (Mais Recente)</option>
               <option value="date-asc">Data (Mais Antigo)</option>
@@ -355,102 +372,74 @@ const PaymentsDashboard = () => {
         </div>
 
         {/* Tabela de Pagamentos */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-700/50">
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead style={{ backgroundColor: 'var(--bg-secondary)' }}>
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    ID / Usuário
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Plano
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Valor
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Método
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Data
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Ações
-                  </th>
+                  {['ID / Usuário', 'Plano', 'Valor', 'Método', 'Status', 'Data', 'Ações'].map(col => (
+                    <th key={col} style={{ padding: '12px 24px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {col}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700/50">
+              <tbody>
                 {filteredPayments.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <AlertCircle className="w-12 h-12 text-slate-600" />
-                        <p className="text-slate-400 font-medium">
+                    <td colSpan={7} style={{ padding: '48px 24px', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                        <AlertCircle style={{ width: 48, height: 48, color: 'var(--border)' }} />
+                        <p style={{ color: 'var(--text-muted)', fontWeight: 500 }}>
                           Nenhuma transação encontrada
                         </p>
-                        <p className="text-slate-500 text-sm">
+                        <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>
                           Tente ajustar os filtros de busca
                         </p>
                       </div>
                     </td>
                   </tr>
                 ) : (
-                  filteredPayments.map((payment) => {
+                  filteredPayments.map((payment, i) => {
                     const StatusIcon = statusConfig[payment.status].icon;
                     return (
-                      <tr 
-                        key={payment.id} 
-                        className="hover:bg-slate-700/30 transition-colors cursor-pointer"
+                      <tr
+                        key={payment.id}
+                        style={{ borderTop: i > 0 ? '1px solid var(--border)' : undefined, cursor: 'pointer' }}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--bg-secondary)')}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = '')}
                         onClick={() => setSelectedPayment(payment)}
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div>
-                            <p className="text-sm font-medium text-white">
-                              {payment.id}
-                            </p>
-                            <p className="text-sm text-slate-400">
-                              {payment.userName}
-                            </p>
-                            <p className="text-xs text-slate-500">
-                              {payment.userEmail}
-                            </p>
-                          </div>
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap' }}>
+                          <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', marginBottom: 2 }}>{payment.id}</p>
+                          <p style={{ fontSize: 13, color: 'var(--text)', marginBottom: 2 }}>{payment.userName}</p>
+                          <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>{payment.userEmail}</p>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-white font-medium">
-                            {payment.planName}
-                          </span>
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>{payment.planName}</span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm font-bold text-green-400">
-                            R$ {payment.amount.toFixed(2)}
-                          </span>
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: '#10b981' }}>R$ {payment.amount.toFixed(2)}</span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-slate-300">
-                            {payment.method}
-                          </span>
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{payment.method}</span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap' }}>
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig[payment.status].color}`}>
                             <StatusIcon className="w-3.5 h-3.5" />
                             {statusConfig[payment.status].label}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap', fontSize: 13, color: 'var(--text-muted)' }}>
                           {formatDate(payment.date)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <button 
+                        <td style={{ padding: '16px 24px', whiteSpace: 'nowrap' }}>
+                          <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedPayment(payment);
                             }}
-                            className="text-purple-400 hover:text-purple-300 font-medium"
+                            style={{ color: '#e8192c', fontWeight: 600, fontSize: 13, background: 'none', border: 'none', cursor: 'pointer' }}
                           >
                             Detalhes
                           </button>
@@ -466,88 +455,88 @@ const PaymentsDashboard = () => {
 
         {/* Modal de Detalhes */}
         {selectedPayment && (
-          <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          <div
+            style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, zIndex: 50 }}
             onClick={() => setSelectedPayment(null)}
           >
-            <div 
-              className="bg-slate-800 border border-slate-700 rounded-2xl p-8 max-w-2xl w-full"
+            <div
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 32, maxWidth: 640, width: '100%' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-white">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+                <h3 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text)' }}>
                   Detalhes da Transação
                 </h3>
-                <button 
+                <button
                   onClick={() => setSelectedPayment(null)}
-                  className="text-slate-400 hover:text-white"
+                  style={{ color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircle style={{ width: 24, height: 24 }} />
                 </button>
               </div>
 
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
                   <div>
-                    <p className="text-slate-400 text-sm mb-1">ID da Transação</p>
-                    <p className="text-white font-mono">{selectedPayment.id}</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>ID da Transação</p>
+                    <p style={{ color: 'var(--text)', fontFamily: 'monospace' }}>{selectedPayment.id}</p>
                   </div>
                   <div>
-                    <p className="text-slate-400 text-sm mb-1">ID Externo</p>
-                    <p className="text-white font-mono">{selectedPayment.transactionId}</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>ID Externo</p>
+                    <p style={{ color: 'var(--text)', fontFamily: 'monospace' }}>{selectedPayment.transactionId}</p>
                   </div>
                 </div>
 
-                <div className="border-t border-slate-700 pt-6">
-                  <h4 className="text-white font-semibold mb-4">Informações do Cliente</h4>
-                  <div className="grid grid-cols-2 gap-4">
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: 24 }}>
+                  <h4 style={{ color: 'var(--text)', fontWeight: 600, marginBottom: 16 }}>Informações do Cliente</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Nome</p>
-                      <p className="text-white">{selectedPayment.userName}</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Nome</p>
+                      <p style={{ color: 'var(--text)' }}>{selectedPayment.userName}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Email</p>
-                      <p className="text-white">{selectedPayment.userEmail}</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Email</p>
+                      <p style={{ color: 'var(--text)' }}>{selectedPayment.userEmail}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-slate-700 pt-6">
-                  <h4 className="text-white font-semibold mb-4">Detalhes do Pagamento</h4>
-                  <div className="grid grid-cols-2 gap-4">
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: 24 }}>
+                  <h4 style={{ color: 'var(--text)', fontWeight: 600, marginBottom: 16 }}>Detalhes do Pagamento</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Plano</p>
-                      <p className="text-white font-medium">{selectedPayment.planName}</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Plano</p>
+                      <p style={{ color: 'var(--text)', fontWeight: 500 }}>{selectedPayment.planName}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Valor</p>
-                      <p className="text-green-400 font-bold text-lg">
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Valor</p>
+                      <p style={{ color: '#10b981', fontWeight: 700, fontSize: 18 }}>
                         R$ {selectedPayment.amount.toFixed(2)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Método de Pagamento</p>
-                      <p className="text-white">{selectedPayment.method}</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Método de Pagamento</p>
+                      <p style={{ color: 'var(--text)' }}>{selectedPayment.method}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Status</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Status</p>
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${statusConfig[selectedPayment.status].color}`}>
                         {React.createElement(statusConfig[selectedPayment.status].icon, { className: 'w-4 h-4' })}
                         {statusConfig[selectedPayment.status].label}
                       </span>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-sm mb-1">Data</p>
-                      <p className="text-white">{formatDate(selectedPayment.date)}</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 4 }}>Data</p>
+                      <p style={{ color: 'var(--text)' }}>{formatDate(selectedPayment.date)}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-6">
-                  <button className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+                <div style={{ display: 'flex', gap: 16, paddingTop: 8 }}>
+                  <button style={{ flex: 1, padding: '12px 24px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 8, cursor: 'pointer', fontWeight: 500, fontSize: 14 }}>
                     Reembolsar
                   </button>
-                  <button className="flex-1 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                  <button style={{ flex: 1, padding: '12px 24px', backgroundColor: '#e8192c', border: 'none', color: '#ffffff', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>
                     Baixar Comprovante
                   </button>
                 </div>

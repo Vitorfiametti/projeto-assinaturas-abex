@@ -5,17 +5,17 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import withAuth from '@/components/withAuth';
 import Layout from '@/components/Layout';
-import { 
-  FileText, 
-  Video, 
-  Calendar, 
-  Globe, 
-  Lock, 
-  Eye, 
+import {
+  FileText,
+  Video,
+  Calendar,
+  Globe,
+  Lock,
+  Eye,
   EyeOff,
-  Plus, 
-  Edit3, 
-  Trash2, 
+  Plus,
+  Edit3,
+  Trash2,
   Save,
   X,
   AlertCircle,
@@ -68,13 +68,13 @@ interface Plan {
 }
 
 const contentTypes = [
-  { value: 'Article', label: 'Article', icon: FileText, color: 'blue' },
-  { value: 'Video', label: 'Video', icon: Video, color: 'red' },
-  { value: 'Event', label: 'Event', icon: Calendar, color: 'purple' },
-  { value: 'Podcast', label: 'Podcast', icon: Headphones, color: 'green' },
-  { value: 'Course', label: 'Course', icon: BookOpen, color: 'orange' },
-  { value: 'Webinar', label: 'Webinar', icon: Monitor, color: 'indigo' },
-  { value: 'Other', label: 'Other', icon: Archive, color: 'gray' },
+  { value: 'Article', label: 'Article', icon: FileText, color: '#e8192c' },
+  { value: 'Video', label: 'Video', icon: Video, color: '#e8192c' },
+  { value: 'Event', label: 'Event', icon: Calendar, color: '#00c9b1' },
+  { value: 'Podcast', label: 'Podcast', icon: Headphones, color: '#10b981' },
+  { value: 'Course', label: 'Course', icon: BookOpen, color: '#f97316' },
+  { value: 'Webinar', label: 'Webinar', icon: Monitor, color: '#00c9b1' },
+  { value: 'Other', label: 'Other', icon: Archive, color: '#6b7280' },
 ];
 
 function ManageContentPage() {
@@ -90,7 +90,7 @@ function ManageContentPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterRestricted, setFilterRestricted] = useState('');
-  
+
   const [form, setForm] = useState<Partial<Content>>({
     title: '',
     description: '',
@@ -119,7 +119,7 @@ function ManageContentPage() {
     let filtered = contents;
 
     if (searchTerm) {
-      filtered = filtered.filter(content => 
+      filtered = filtered.filter(content =>
         content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         content.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -130,7 +130,7 @@ function ManageContentPage() {
     }
 
     if (filterRestricted !== '') {
-      filtered = filtered.filter(content => 
+      filtered = filtered.filter(content =>
         filterRestricted === 'true' ? content.restricted : !content.restricted
       );
     }
@@ -172,7 +172,7 @@ function ManageContentPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setForm({ ...form, [name]: checked });
@@ -279,45 +279,81 @@ function ManageContentPage() {
     return contentTypes.find(t => t.value === type) || contentTypes[0];
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '12px 16px',
+    backgroundColor: 'var(--bg)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
+    color: 'var(--text)',
+    outline: 'none',
+    boxSizing: 'border-box',
+  };
+
   const ContentCard = ({ content }: { content: Content }) => {
     const typeConfig = getTypeConfig(content.type);
     const IconComponent = typeConfig.icon;
 
     return (
-      <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/70 transition-all duration-300 hover:scale-[1.02] group">
-        
+      <div style={{
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: '16px',
+        padding: '24px',
+        transition: 'all 0.3s',
+      }}>
+
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${
-            typeConfig.color === 'blue' ? 'from-blue-500 to-blue-600' :
-            typeConfig.color === 'red' ? 'from-red-500 to-red-600' :
-            typeConfig.color === 'purple' ? 'from-purple-500 to-purple-600' :
-            typeConfig.color === 'green' ? 'from-green-500 to-green-600' :
-            typeConfig.color === 'orange' ? 'from-orange-500 to-orange-600' :
-            typeConfig.color === 'indigo' ? 'from-indigo-500 to-indigo-600' :
-            'from-gray-500 to-gray-600'
-          } flex items-center justify-center shadow-lg`}>
-            <IconComponent className="w-6 h-6 text-white" />
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '12px',
+            backgroundColor: typeConfig.color,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          }}>
+            <IconComponent style={{ width: '24px', height: '24px', color: '#ffffff' }} />
           </div>
-          
-          <div className="flex items-center gap-2">
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {/* Status Badge */}
             <button
               onClick={() => toggleContentStatus(content._id, content.active !== false)}
-              className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-colors ${
-                content.active !== false 
-                  ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30' 
-                  : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
-              }`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 8px',
+                borderRadius: '9999px',
+                fontSize: '12px',
+                fontWeight: 500,
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: content.active !== false ? 'var(--teal-subtle)' : 'var(--accent-subtle)',
+                color: content.active !== false ? 'var(--teal)' : 'var(--accent)',
+              }}
             >
-              {content.active !== false ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+              {content.active !== false ? <Eye style={{ width: '12px', height: '12px' }} /> : <EyeOff style={{ width: '12px', height: '12px' }} />}
               {content.active !== false ? 'Active' : 'Inactive'}
             </button>
 
             {/* Restricted Badge */}
             {content.restricted && (
-              <div className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400">
-                <Lock className="w-3 h-3" />
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 8px',
+                borderRadius: '9999px',
+                fontSize: '12px',
+                fontWeight: 500,
+                backgroundColor: 'var(--accent-subtle)',
+                color: 'var(--accent)',
+              }}>
+                <Lock style={{ width: '12px', height: '12px' }} />
                 Restricted
               </div>
             )}
@@ -325,24 +361,24 @@ function ManageContentPage() {
         </div>
 
         {/* Content */}
-        <div className="mb-4">
-          <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{content.title}</h3>
-          <p className="text-slate-400 text-sm line-clamp-3 mb-3">{content.description}</p>
-          
-          <div className="flex items-center gap-4 text-xs text-slate-500">
-            <span className="flex items-center gap-1">
-              <Tag className="w-3 h-3" />
+        <div style={{ marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>{content.title}</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '12px' }}>{content.description}</p>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Tag style={{ width: '12px', height: '12px' }} />
               {typeConfig.label}
             </span>
             {content.plan && (
-              <span className="flex items-center gap-1">
-                <Crown className="w-3 h-3" />
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Crown style={{ width: '12px', height: '12px' }} />
                 {content.plan.name}
               </span>
             )}
             {content.url && (
-              <span className="flex items-center gap-1">
-                <Link className="w-3 h-3" />
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Link style={{ width: '12px', height: '12px' }} />
                 External URL
               </span>
             )}
@@ -350,44 +386,79 @@ function ManageContentPage() {
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-between mb-4 pt-4 border-t border-slate-700">
-          <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1 text-slate-400">
-              <Eye className="w-4 h-4" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+              <Eye style={{ width: '16px', height: '16px' }} />
               {content.views || 0}
             </div>
-            <div className="flex items-center gap-1 text-slate-400">
-              <TrendingUp className="w-4 h-4" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+              <TrendingUp style={{ width: '16px', height: '16px' }} />
               {content.engagement || 0}%
             </div>
           </div>
-          <div className="text-xs text-slate-500">
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
             {new Date(content.publishDate).toLocaleDateString('en-US')}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: '8px' }}>
           <button
             onClick={() => handleEdit(content)}
-            className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            style={{
+              flex: 1,
+              backgroundColor: 'var(--teal-subtle)',
+              color: 'var(--teal)',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              fontWeight: 500,
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+            }}
           >
-            <Edit3 className="w-4 h-4" />
+            <Edit3 style={{ width: '16px', height: '16px' }} />
             Edit
           </button>
           {content.url && (
             <button
               onClick={() => window.open(content.url, '_blank')}
-              className="bg-green-500/20 hover:bg-green-500/30 text-green-400 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center"
+              style={{
+                backgroundColor: '#d1fae5',
+                color: '#059669',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontWeight: 500,
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink style={{ width: '16px', height: '16px' }} />
             </button>
           )}
           <button
             onClick={() => handleDelete(content._id, content.title)}
-            className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center"
+            style={{
+              backgroundColor: 'var(--accent-subtle)',
+              color: 'var(--accent)',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              fontWeight: 500,
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 style={{ width: '16px', height: '16px' }} />
           </button>
         </div>
       </div>
@@ -396,11 +467,19 @@ function ManageContentPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <Layout >
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-slate-300 text-lg">Loading content...</p>
+      <Layout>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg)' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              border: '4px solid var(--accent)',
+              borderTopColor: 'transparent',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 16px',
+            }}></div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '18px' }}>Loading content...</p>
           </div>
         </div>
       </Layout>
@@ -410,10 +489,10 @@ function ManageContentPage() {
   if (!session) {
     return (
       <Layout activeTab='admin-content'>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center bg-red-500/10 border border-red-500/20 rounded-2xl p-8">
-            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-            <p className="text-red-400 text-lg">Access denied. Please login as administrator.</p>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg)' }}>
+          <div style={{ textAlign: 'center', backgroundColor: 'var(--accent-subtle)', border: '1px solid var(--accent)', borderRadius: '16px', padding: '32px' }}>
+            <AlertCircle style={{ width: '64px', height: '64px', color: 'var(--accent)', margin: '0 auto 16px' }} />
+            <p style={{ color: 'var(--accent)', fontSize: '18px' }}>Access denied. Please login as administrator.</p>
           </div>
         </div>
       </Layout>
@@ -422,351 +501,409 @@ function ManageContentPage() {
 
   return (
     <Layout activeTab='admin-content'>
-      <div className="container mx-auto p-4 lg:p-6 max-w-7xl space-y-8">
-        
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
-              Manage Content
-            </h1>
-            <p className="text-slate-400">Create and manage your platform's exclusive content</p>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              Export
-            </button>
-            <button
-              onClick={() => {
-                resetForm();
-                setShowForm(true);
-              }}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-2 shadow-lg"
-            >
-              <Plus className="w-5 h-5" />
-              New Content
-            </button>
-          </div>
-        </div>
+      <div style={{ backgroundColor: 'var(--bg)', minHeight: '100vh', padding: '16px 24px' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-400" />
-            <p className="text-red-400">{error}</p>
-            <button 
-              onClick={() => setError(null)}
-              className="ml-auto text-red-400 hover:text-red-300"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+          {/* Header */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+            <div>
+              <h1 style={{ fontSize: '32px', fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                Gerenciar Conteúdo
+              </h1>
+              <p style={{ color: 'var(--text-muted)' }}>Create and manage your platform's exclusive content</p>
+            </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{contents.length}</p>
-                <p className="text-slate-400 text-sm">Total</p>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button style={{
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                <Download style={{ width: '16px', height: '16px' }} />
+                Export
+              </button>
+              <button
+                onClick={() => {
+                  resetForm();
+                  setShowForm(true);
+                }}
+                style={{
+                  backgroundColor: 'var(--accent)',
+                  color: '#ffffff',
+                  padding: '12px 24px',
+                  borderRadius: '12px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <Plus style={{ width: '20px', height: '20px' }} />
+                New Content
+              </button>
             </div>
           </div>
-          
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                <Eye className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {contents.filter(c => c.active !== false).length}
-                </p>
-                <p className="text-slate-400 text-sm">Active</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <Lock className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {contents.filter(c => c.restricted).length}
-                </p>
-                <p className="text-slate-400 text-sm">Restricted</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {Math.round(contents.reduce((acc, c) => acc + (c.engagement || 0), 0) / contents.length) || 0}%
-                </p>
-                <p className="text-slate-400 text-sm">Engagement</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Filters */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+          {/* Error Alert */}
+          {error && (
+            <div style={{ backgroundColor: 'var(--accent-subtle)', border: '1px solid var(--accent)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <AlertCircle style={{ width: '20px', height: '20px', color: 'var(--accent)' }} />
+              <p style={{ color: 'var(--accent)' }}>{error}</p>
+              <button
+                onClick={() => setError(null)}
+                style={{ marginLeft: 'auto', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                <X style={{ width: '16px', height: '16px' }} />
+              </button>
+            </div>
+          )}
+
+          {/* Stats Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: 'var(--accent)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileText style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>{contents.length}</p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Total</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: 'var(--teal)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Eye style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>
+                    {contents.filter(c => c.active !== false).length}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Active</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: '#10b981', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Lock style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>
+                    {contents.filter(c => c.restricted).length}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Restricted</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: '#f97316', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <TrendingUp style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)' }}>
+                    {Math.round(contents.reduce((acc, c) => acc + (c.engagement || 0), 0) / contents.length) || 0}%
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Engagement</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+              <div style={{ flex: 1, minWidth: '200px', position: 'relative' }}>
+                <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '20px', height: '20px', color: 'var(--text-muted)' }} />
                 <input
                   type="text"
                   placeholder="Search content..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-slate-600 text-white pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  style={{ ...inputStyle, paddingLeft: '44px' }}
                 />
               </div>
+
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                style={inputStyle}
+              >
+                <option value="">All types</option>
+                {contentTypes.map(type => (
+                  <option key={type.value} value={type.value}>{type.label}</option>
+                ))}
+              </select>
+
+              <select
+                value={filterRestricted}
+                onChange={(e) => setFilterRestricted(e.target.value)}
+                style={inputStyle}
+              >
+                <option value="">All</option>
+                <option value="true">Restricted only</option>
+                <option value="false">Public only</option>
+              </select>
             </div>
-            
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">All types</option>
-              {contentTypes.map(type => (
-                <option key={type.value} value={type.value}>{type.label}</option>
-              ))}
-            </select>
-            
-            <select
-              value={filterRestricted}
-              onChange={(e) => setFilterRestricted(e.target.value)}
-              className="bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">All</option>
-              <option value="true">Restricted only</option>
-              <option value="false">Public only</option>
-            </select>
           </div>
-        </div>
 
-        {/* Content Grid */}
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-purple-400" />
-            Registered Content ({filteredContents.length})
-          </h2>
-          
-          {filteredContents.length === 0 ? (
-            <div className="bg-slate-800/30 border border-slate-700/50 rounded-2xl p-12 text-center">
-              <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-slate-400 mb-2">
-                {contents.length === 0 ? 'No content registered' : 'No content found'}
-              </h3>
-              <p className="text-slate-500 mb-6">
-                {contents.length === 0 
-                  ? 'Start by creating your first exclusive content'
-                  : 'Try adjusting the search filters'
-                }
-              </p>
-              {contents.length === 0 && (
-                <button
-                  onClick={() => {
-                    resetForm();
-                    setShowForm(true);
-                  }}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-2 mx-auto"
-                >
-                  <Plus className="w-5 h-5" />
-                  Create First Content
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredContents.map((content) => (
-                <ContentCard key={content._id} content={content} />
-              ))}
-            </div>
-          )}
-        </div>
+          {/* Content Grid */}
+          <div>
+            <h2 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <FileText style={{ width: '24px', height: '24px', color: 'var(--accent)' }} />
+              Registered Content ({filteredContents.length})
+            </h2>
 
-        {/* Form Modal */}
-        {showForm && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  {isEditing ? <Edit3 className="w-6 h-6 text-blue-400" /> : <Plus className="w-6 h-6 text-purple-400" />}
-                  {isEditing ? 'Edit Content' : 'Create New Content'}
-                </h2>
-                <button
-                  onClick={() => setShowForm(false)}
-                  className="text-slate-400 hover:text-white transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+            {filteredContents.length === 0 ? (
+              <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '48px', textAlign: 'center' }}>
+                <FileText style={{ width: '64px', height: '64px', color: 'var(--border)', margin: '0 auto 16px' }} />
+                <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px' }}>
+                  {contents.length === 0 ? 'No content registered' : 'No content found'}
+                </h3>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>
+                  {contents.length === 0
+                    ? 'Start by creating your first exclusive content'
+                    : 'Try adjusting the search filters'
+                  }
+                </p>
+                {contents.length === 0 && (
+                  <button
+                    onClick={() => {
+                      resetForm();
+                      setShowForm(true);
+                    }}
+                    style={{
+                      backgroundColor: 'var(--accent)',
+                      color: '#ffffff',
+                      padding: '12px 24px',
+                      borderRadius: '12px',
+                      fontWeight: 600,
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <Plus style={{ width: '20px', height: '20px' }} />
+                    Create First Content
+                  </button>
+                )}
               </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+                {filteredContents.map((content) => (
+                  <ContentCard key={content._id} content={content} />
+                ))}
+              </div>
+            )}
+          </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                      Title *
-                    </label>
-                    <input
-                      type="text"
-                      name="title"
-                      value={form.title || ''}
-                      onChange={handleChange}
-                      className="w-full bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      placeholder="Content title"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                      Type *
-                    </label>
-                    <select
-                      name="type"
-                      value={form.type || 'Article'}
-                      onChange={handleChange}
-                      className="w-full bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      required
-                    >
-                      {contentTypes.map(type => (
-                        <option key={type.value} value={type.value}>{type.label}</option>
-                      ))}
-                    </select>
-                  </div>
+          {/* Form Modal */}
+          {showForm && (
+            <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+              <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', width: '100%', maxWidth: '768px', maxHeight: '90vh', overflowY: 'auto' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                  <h2 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {isEditing
+                      ? <Edit3 style={{ width: '24px', height: '24px', color: 'var(--teal)' }} />
+                      : <Plus style={{ width: '24px', height: '24px', color: 'var(--accent)' }} />
+                    }
+                    {isEditing ? 'Edit Content' : 'Create New Content'}
+                  </h2>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    style={{ color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    <X style={{ width: '24px', height: '24px' }} />
+                  </button>
                 </div>
 
-                <div>
-                  <label className="block text-slate-300 text-sm font-medium mb-2">
-                    Description *
-                  </label>
-                  <textarea
-                    name="description"
-                    value={form.description || ''}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="Describe the content..."
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                      External URL (optional)
-                    </label>
-                    <div className="relative">
-                      <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                    <div>
+                      <label style={{ display: 'block', color: 'var(--text)', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+                        Title *
+                      </label>
                       <input
-                        type="url"
-                        name="url"
-                        value={form.url || ''}
+                        type="text"
+                        name="title"
+                        value={form.title || ''}
                         onChange={handleChange}
-                        className="w-full bg-slate-900/50 border border-slate-600 text-white pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        placeholder="https://example.com"
+                        style={inputStyle}
+                        placeholder="Content title"
+                        required
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                      Associate with Plan
-                    </label>
-                    <div className="relative">
-                      <Crown className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <div>
+                      <label style={{ display: 'block', color: 'var(--text)', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+                        Type *
+                      </label>
                       <select
-                        name="planId"
-                        value={form.planId || ''}
+                        name="type"
+                        value={form.type || 'Article'}
                         onChange={handleChange}
-                        className="w-full bg-slate-900/50 border border-slate-600 text-white pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        style={inputStyle}
+                        required
                       >
-                        <option value="">Public or All Subscribers</option>
-                        {availablePlans.map((plan) => (
-                          <option key={plan._id} value={plan._id}>
-                            {plan.name}
-                          </option>
+                        {contentTypes.map(type => (
+                          <option key={type.value} value={type.value}>{type.label}</option>
                         ))}
                       </select>
                     </div>
                   </div>
-                </div>
 
-                {/* Checkboxes */}
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="restricted"
-                      checked={form.restricted || false}
+                  <div>
+                    <label style={{ display: 'block', color: 'var(--text)', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+                      Description *
+                    </label>
+                    <textarea
+                      name="description"
+                      value={form.description || ''}
                       onChange={handleChange}
-                      className="w-5 h-5 rounded border-2 border-slate-600 text-purple-500 focus:ring-purple-500 focus:ring-2"
+                      rows={4}
+                      style={{ ...inputStyle, resize: 'vertical' }}
+                      placeholder="Describe the content..."
+                      required
                     />
-                    <span className="text-slate-300 flex items-center gap-2">
-                      <Lock className="w-4 h-4" />
-                      Restricted content (subscribers only)
-                    </span>
-                  </label>
+                  </div>
 
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="active"
-                      checked={form.active !== false}
-                      onChange={handleChange}
-                      className="w-5 h-5 rounded border-2 border-slate-600 text-green-500 focus:ring-green-500 focus:ring-2"
-                    />
-                    <span className="text-slate-300 flex items-center gap-2">
-                      <Eye className="w-4 h-4" />
-                      Active content
-                    </span>
-                  </label>
-                </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                    <div>
+                      <label style={{ display: 'block', color: 'var(--text)', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+                        External URL (optional)
+                      </label>
+                      <div style={{ position: 'relative' }}>
+                        <Link style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '20px', height: '20px', color: 'var(--text-muted)' }} />
+                        <input
+                          type="url"
+                          name="url"
+                          value={form.url || ''}
+                          onChange={handleChange}
+                          style={{ ...inputStyle, paddingLeft: '44px' }}
+                          placeholder="https://example.com"
+                        />
+                      </div>
+                    </div>
 
-                {/* Form Actions */}
-                <div className="flex gap-4 pt-6 border-t border-slate-700">
-                  <button
-                    type="button"
-                    onClick={() => setShowForm(false)}
-                    className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-xl font-medium transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={formLoading}
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    {formLoading ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Save className="w-5 h-5" />
-                    )}
-                    {formLoading ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Content'}
-                  </button>
-                </div>
-              </form>
+                    <div>
+                      <label style={{ display: 'block', color: 'var(--text)', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+                        Associate with Plan
+                      </label>
+                      <div style={{ position: 'relative' }}>
+                        <Crown style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '20px', height: '20px', color: 'var(--text-muted)' }} />
+                        <select
+                          name="planId"
+                          value={form.planId || ''}
+                          onChange={handleChange}
+                          style={{ ...inputStyle, paddingLeft: '44px' }}
+                        >
+                          <option value="">Public or All Subscribers</option>
+                          {availablePlans.map((plan) => (
+                            <option key={plan._id} value={plan._id}>
+                              {plan.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Checkboxes */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        name="restricted"
+                        checked={form.restricted || false}
+                        onChange={handleChange}
+                        style={{ width: '20px', height: '20px' }}
+                      />
+                      <span style={{ color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Lock style={{ width: '16px', height: '16px' }} />
+                        Restricted content (subscribers only)
+                      </span>
+                    </label>
+
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        name="active"
+                        checked={form.active !== false}
+                        onChange={handleChange}
+                        style={{ width: '20px', height: '20px' }}
+                      />
+                      <span style={{ color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Eye style={{ width: '16px', height: '16px' }} />
+                        Active content
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Form Actions */}
+                  <div style={{ display: 'flex', gap: '16px', paddingTop: '24px', borderTop: '1px solid var(--border)' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      style={{
+                        flex: 1,
+                        backgroundColor: 'var(--bg-secondary)',
+                        color: 'var(--text)',
+                        padding: '12px 24px',
+                        borderRadius: '12px',
+                        fontWeight: 500,
+                        border: '1px solid var(--border)',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={formLoading}
+                      style={{
+                        flex: 1,
+                        backgroundColor: 'var(--accent)',
+                        color: '#ffffff',
+                        padding: '12px 24px',
+                        borderRadius: '12px',
+                        fontWeight: 500,
+                        border: 'none',
+                        cursor: formLoading ? 'not-allowed' : 'pointer',
+                        opacity: formLoading ? 0.5 : 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      {formLoading ? (
+                        <div style={{ width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#ffffff', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                      ) : (
+                        <Save style={{ width: '20px', height: '20px' }} />
+                      )}
+                      {formLoading ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Content'}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Layout>
   );

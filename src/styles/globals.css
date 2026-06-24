@@ -1,36 +1,86 @@
 @import "tailwindcss";
 
-html {
-
-  font-family: "Poppins", sans-serif !important;
-
+/* ─── Theme Variables ─────────────────────────────────────── */
+:root {
+  --bg:           #f5f3ee;
+  --bg-secondary: #eeece7;
+  --bg-card:      #ffffff;
+  --text:         #111111;
+  --text-muted:   #666666;
+  --border:       #e0ddd8;
+  --accent:       #e8192c;
+  --accent-fg:    #ffffff;
+  --accent-subtle:#fde8ea;
+  --teal:         #00c9b1;
+  --teal-subtle:  #e0faf7;
+  --dark-card:    #222222;
+  --dark-card-2:  #2a2a2a;
+  --nav-bg:       rgba(255, 255, 255, 0.97);
+  --shadow-sm:    0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow:       0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md:    0 4px 16px -1px rgb(0 0 0 / 0.12), 0 2px 6px -2px rgb(0 0 0 / 0.08);
 }
 
+.dark {
+  --bg:           #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-card:      #222222;
+  --text:         #f1f5f9;
+  --text-muted:   #94a3b8;
+  --border:       #333333;
+  --accent:       #e8192c;
+  --accent-fg:    #ffffff;
+  --accent-subtle:#3d0a0e;
+  --teal:         #00c9b1;
+  --teal-subtle:  #0a2926;
+  --dark-card:    #1a1a1a;
+  --dark-card-2:  #2a2a2a;
+  --nav-bg:       rgba(15, 15, 15, 0.97);
+  --shadow-sm:    0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow:       0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-md:    0 4px 16px -1px rgb(0 0 0 / 0.5), 0 2px 6px -2px rgb(0 0 0 / 0.4);
+}
+
+/* ─── Base ────────────────────────────────────────────────── */
+html {
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif !important;
+}
 
 body {
-
-  font-family: "Poppins", sans-serif !important;
-
-  @apply bg-neutral-800 text-white font-sans;
-
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif !important;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+/* ─── Theme Utilities ─────────────────────────────────────── */
+.t-bg            { background-color: var(--bg); }
+.t-bg-secondary  { background-color: var(--bg-secondary); }
+.t-bg-card       { background-color: var(--bg-card); }
+.t-text          { color: var(--text); }
+.t-text-muted    { color: var(--text-muted); }
+.t-border        { border-color: var(--border); }
 
-.font-sans {
-
-  font-family: "Poppins", sans-serif !important;
-
+.t-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
+.t-card-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.t-card-hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ─── Animations ──────────────────────────────────────────── */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.25s ease-out;
 }

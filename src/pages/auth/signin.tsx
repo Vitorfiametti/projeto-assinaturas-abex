@@ -8,11 +8,11 @@ import Link from 'next/link';
 import withAuth from '@/components/withAuth';
 import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { 
-  Crown, 
-  Shield, 
-  Sparkles, 
-  Users, 
+import {
+  Crown,
+  Shield,
+  Sparkles,
+  Users,
   ArrowRight,
   Star,
   CheckCircle
@@ -39,7 +39,6 @@ function SignIn({ providers }: SignInPageProps) {
     }
   };
 
-  // ✨ USAR TRADUÇÕES nas features
   const features = [
     {
       icon: <Crown className="w-5 h-5" />,
@@ -60,191 +59,306 @@ function SignIn({ providers }: SignInPageProps) {
 
   return (
     <Layout>
-      <div className="min-h-screen flex items-center justify-center px-4 py-8 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20" />
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-full blur-3xl" />
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '2rem 1rem',
+          backgroundColor: 'var(--bg)',
+        }}
+      >
+        <div style={{ width: '100%', maxWidth: '72rem', margin: '0 auto' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '3rem',
+              alignItems: 'center',
+            }}
+          >
             {/* Left side - Branding & Features */}
-            <div className="text-center lg:text-left order-2 lg:order-1">
-              <div className="mb-8">
-                <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
-                  <div className="p-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl">
-                    <Crown className="w-8 h-8 text-white" />
-                  </div>
-                  <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                    Abex Clubs
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                  <h1
+                    style={{
+                      fontSize: '2.5rem',
+                      fontWeight: 900,
+                      fontStyle: 'italic',
+                      color: 'var(--accent)',
+                      margin: 0,
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    Abex Clubs!
                   </h1>
                 </div>
-                <p className="text-xl text-slate-300 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                <p
+                  style={{
+                    fontSize: '1.125rem',
+                    color: 'var(--text-muted)',
+                    maxWidth: '32rem',
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
                   {t('signin.subtitle')}
                 </p>
               </div>
 
               {/* Features */}
-              <div className="space-y-6 mb-8">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
                 {features.map((feature, index) => (
-                  <div 
+                  <div
                     key={index}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '1rem',
+                      padding: '1rem',
+                      borderRadius: '12px',
+                      backgroundColor: 'var(--bg-secondary)',
+                      border: '1px solid var(--border)',
+                    }}
                   >
-                    <div className="p-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg text-purple-400">
+                    <div
+                      style={{
+                        padding: '0.5rem',
+                        borderRadius: '8px',
+                        backgroundColor: 'var(--accent-subtle)',
+                        color: 'var(--accent)',
+                        flexShrink: 0,
+                      }}
+                    >
                       {feature.icon}
                     </div>
-                    <div className="text-left">
-                      <h3 className="font-semibold text-white mb-1">{feature.title}</h3>
-                      <p className="text-sm text-slate-400">{feature.description}</p>
+                    <div>
+                      <h3
+                        style={{
+                          fontWeight: 700,
+                          color: 'var(--text)',
+                          marginBottom: '0.25rem',
+                          margin: '0 0 0.25rem 0',
+                        }}
+                      >
+                        {feature.title}
+                      </h3>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0 }}>
+                        {feature.description}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Social proof */}
-              <div className="flex items-center justify-center lg:justify-start gap-2 text-slate-400">
-                <div className="flex -space-x-2">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', marginRight: '0.25rem' }}>
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full border-2 border-slate-800 flex items-center justify-center">
-                      <Star className="w-3 h-3 text-white fill-current" />
+                    <div
+                      key={i}
+                      style={{
+                        width: '2rem',
+                        height: '2rem',
+                        backgroundColor: 'var(--teal)',
+                        borderRadius: '50%',
+                        border: '2px solid var(--bg)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: i === 1 ? 0 : '-0.5rem',
+                      }}
+                    >
+                      <Star style={{ width: '0.75rem', height: '0.75rem', color: 'white', fill: 'white' }} />
                     </div>
                   ))}
                 </div>
-                <span className="text-sm">
+                <span style={{ fontSize: '0.875rem' }}>
                   {t('signin.stats')}
                 </span>
               </div>
             </div>
 
             {/* Right side - Login Form */}
-            <div className="order-1 lg:order-2">
-              <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 lg:p-10 shadow-2xl relative overflow-hidden">
-                {/* Decorative gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-transparent to-blue-600/10 rounded-3xl" />
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent" />
-                
-                <div className="relative z-10">
-                  {/* Header */}
-                  <div className="text-center mb-8">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 rounded-full text-purple-300 text-sm font-medium mb-4">
-                      <Sparkles className="w-4 h-4" />
-                      {t('signin.badge')}
-                    </div>
-                    <h2 className="text-3xl font-bold text-white mb-3">
-                      {t('signin.title')}
-                    </h2>
-                    <p className="text-slate-400">
-                      {t('signin.description')}
-                    </p>
+            <div>
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '16px',
+                  padding: '2.5rem',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+                }}
+              >
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.375rem 1rem',
+                      backgroundColor: 'var(--accent-subtle)',
+                      borderRadius: '999px',
+                      color: 'var(--accent)',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      marginBottom: '1rem',
+                    }}
+                  >
+                    <Sparkles style={{ width: '1rem', height: '1rem' }} />
+                    {t('signin.badge')}
                   </div>
+                  <h2
+                    style={{
+                      fontSize: '1.75rem',
+                      fontWeight: 800,
+                      color: 'var(--text)',
+                      textTransform: 'uppercase',
+                      marginBottom: '0.75rem',
+                      margin: '0 0 0.75rem 0',
+                    }}
+                  >
+                    {t('signin.title')}
+                  </h2>
+                  <p style={{ color: 'var(--text-muted)', margin: 0 }}>
+                    {t('signin.description')}
+                  </p>
+                </div>
 
-                  {/* Google Sign In Button */}
-                  {providers && Object.values(providers).map((provider) => {
-                    if (provider.id === 'google') {
-                      return (
-                        <div key={provider.name} className="space-y-6">
-                          <button
-                            onClick={handleGoogleSignIn}
-                            disabled={isLoading}
-                            className="group w-full bg-white hover:bg-gray-50 text-gray-800 font-semibold py-4 px-6 rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 border border-gray-200"
-                          >
-                            {isLoading ? (
-                              <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-800 rounded-full animate-spin" />
-                            ) : (
-                              <Image 
-                                src={google_logo} 
-                                alt="Google Logo" 
-                                className="w-6 h-6" 
-                              />
-                            )}
-                            <span className="text-lg">
-                              {isLoading 
-                                ? t('signin.signing')
-                                : t('signin.googleButton')
-                              }
-                            </span>
-                            {!isLoading && (
-                              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                            )}
-                          </button>
-
-                          {/* Benefits */}
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-3 text-slate-300 text-sm">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              {t('signin.benefits.secure')}
-                            </div>
-                            <div className="flex items-center gap-3 text-slate-300 text-sm">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              {t('signin.benefits.instant')}
-                            </div>
-                            <div className="flex items-center gap-3 text-slate-300 text-sm">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              {t('signin.benefits.sync')}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })}
-
-                  {/* Divider */}
-                  <div className="my-8 flex items-center">
-                    <div className="flex-1 border-t border-slate-600"></div>
-                    <span className="px-4 text-slate-500 text-sm">
-                      {t('signin.secureLabel')}
+                {/* Google Sign In Button — sempre visível */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <button
+                    onClick={handleGoogleSignIn}
+                    disabled={isLoading}
+                    style={{
+                      width: '100%',
+                      backgroundColor: 'var(--bg-card)',
+                      border: '2px solid var(--border)',
+                      borderRadius: '12px',
+                      padding: '1rem 1.5rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.75rem',
+                      fontWeight: 600,
+                      fontSize: '1.05rem',
+                      color: 'var(--text)',
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      opacity: isLoading ? 0.6 : 1,
+                      transition: 'border-color 0.2s, box-shadow 0.2s',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    }}
+                    onMouseEnter={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; }}
+                  >
+                    {isLoading ? (
+                      <div
+                        style={{
+                          width: '1.5rem',
+                          height: '1.5rem',
+                          border: '2px solid var(--border)',
+                          borderTopColor: 'var(--accent)',
+                          borderRadius: '50%',
+                          animation: 'spin 0.8s linear infinite',
+                        }}
+                      />
+                    ) : (
+                      <Image
+                        src={google_logo}
+                        alt="Google Logo"
+                        width={24}
+                        height={24}
+                        style={{ width: '1.5rem', height: '1.5rem' }}
+                      />
+                    )}
+                    <span>
+                      {isLoading
+                        ? t('signin.signing')
+                        : t('signin.googleButton')
+                      }
                     </span>
-                    <div className="flex-1 border-t border-slate-600"></div>
-                  </div>
+                    {!isLoading && (
+                      <ArrowRight style={{ width: '1.25rem', height: '1.25rem' }} />
+                    )}
+                  </button>
 
-                  {/* Security note */}
-                  <div className="text-center">
-                    <p className="text-xs text-slate-500 leading-relaxed">
-                      {t('signin.terms')}{' '}
-                      <Link 
-                        href="/terms" 
-                        className="text-purple-400 hover:text-purple-300 underline"
+                  {/* Benefits */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {[
+                      t('signin.benefits.secure'),
+                      t('signin.benefits.instant'),
+                      t('signin.benefits.sync'),
+                    ].map((benefit, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          color: 'var(--text)',
+                          fontSize: '0.875rem',
+                        }}
                       >
-                        {t('signin.termsLink')}
-                      </Link>{' '}
-                      {t('signin.and')}{' '} 
-                      <Link 
-                        href="/privacy" 
-                        className="text-purple-400 hover:text-purple-300 underline"
-                      >
-                        {t('signin.privacyLink')}
-                      </Link>
-                    </p>
+                        <CheckCircle
+                          style={{ width: '1rem', height: '1rem', color: 'var(--teal)', flexShrink: 0 }}
+                        />
+                        {benefit}
+                      </div>
+                    ))}
                   </div>
+                </div>
+
+                {/* Divider */}
+                <div
+                  style={{
+                    margin: '2rem 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                  }}
+                >
+                  <div style={{ flex: 1, borderTop: '1px solid var(--border)' }} />
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap' }}>
+                    {t('signin.secureLabel')}
+                  </span>
+                  <div style={{ flex: 1, borderTop: '1px solid var(--border)' }} />
+                </div>
+
+                {/* Security note */}
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+                    {t('signin.terms')}{' '}
+                    <Link
+                      href="/terms"
+                      style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+                    >
+                      {t('signin.termsLink')}
+                    </Link>{' '}
+                    {t('signin.and')}{' '}
+                    <Link
+                      href="/privacy"
+                      style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+                    >
+                      {t('signin.privacyLink')}
+                    </Link>
+                  </p>
                 </div>
               </div>
 
               {/* Additional CTA */}
-              <div className="mt-6 text-center">
-                <p className="text-slate-400 text-sm">
-                  {t('signin.newUser')}{' '} 
-                  <span className="text-purple-400 font-medium">
-                    {t('signin.autoCreate')} 
+              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: 0 }}>
+                  {t('signin.newUser')}{' '}
+                  <span style={{ color: 'var(--accent)', fontWeight: 600 }}>
+                    {t('signin.autoCreate')}
                   </span>
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Floating elements */}
-        <div className="absolute top-20 left-10 text-purple-500/20">
-          <Crown className="w-8 h-8 animate-bounce" />
-        </div>
-        <div className="absolute bottom-20 right-10 text-blue-500/20">
-          <Sparkles className="w-6 h-6 animate-pulse" />
-        </div>
-        <div className="absolute top-1/2 right-20 text-purple-500/20">
-          <Star className="w-5 h-5 animate-ping" />
         </div>
       </div>
     </Layout>
@@ -254,7 +368,7 @@ function SignIn({ providers }: SignInPageProps) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const providers = await getProviders();
   return {
-    props: { 
+    props: {
       providers,
     },
   };

@@ -107,7 +107,7 @@ function EventsPage() {
 
     // Células vazias antes do dia 1
     for (let i = 0; i < firstDay; i++) {
-      cells.push(<div key={`empty-${i}`} className="h-14 sm:h-16" />);
+      cells.push(<div key={`empty-${i}`} style={{ height: '3.5rem' }} />);
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -118,26 +118,60 @@ function EventsPage() {
         currentYear === today.getFullYear();
       const isSelected = selectedDay === day;
 
+      let cellStyle: React.CSSProperties = {
+        height: '3.5rem',
+        borderRadius: '0.75rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingTop: '0.25rem',
+        gap: '0.25rem',
+        transition: 'all 0.2s',
+        border: '1px solid var(--border)',
+        cursor: 'pointer',
+        background: 'var(--bg-secondary)',
+      };
+
+      if (isSelected) {
+        cellStyle = {
+          ...cellStyle,
+          background: 'var(--teal)',
+          border: '1px solid var(--teal)',
+        };
+      } else if (isToday) {
+        cellStyle = {
+          ...cellStyle,
+          background: 'var(--bg-secondary)',
+          border: '2px solid var(--teal)',
+        };
+      }
+
+      const dayNumStyle: React.CSSProperties = {
+        fontSize: '0.875rem',
+        fontWeight: 600,
+        color: isSelected ? '#ffffff' : isToday ? 'var(--teal)' : 'var(--text)',
+      };
+
       cells.push(
         <button
           key={day}
           onClick={() => setSelectedDay(isSelected ? null : day)}
-          className={`
-            h-14 sm:h-16 rounded-xl flex flex-col items-center justify-start pt-1 gap-1 transition-all duration-200 border
-            ${isSelected
-              ? 'bg-purple-600 border-purple-400 shadow-lg shadow-purple-500/30'
-              : isToday
-              ? 'bg-slate-700 border-purple-500/50'
-              : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700/70 hover:border-purple-500/30'}
-          `}
+          style={cellStyle}
         >
-          <span className={`text-sm font-semibold ${isSelected ? 'text-white' : isToday ? 'text-purple-300' : 'text-slate-300'}`}>
-            {day}
-          </span>
+          <span style={dayNumStyle}>{day}</span>
           {dayEvents.length > 0 && (
-            <div className="flex gap-0.5">
+            <div style={{ display: 'flex', gap: '0.125rem' }}>
               {dayEvents.slice(0, 3).map((_, i) => (
-                <span key={i} className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-purple-400'}`} />
+                <span
+                  key={i}
+                  style={{
+                    width: '0.375rem',
+                    height: '0.375rem',
+                    borderRadius: '9999px',
+                    background: isSelected ? '#ffffff' : 'var(--accent)',
+                  }}
+                />
               ))}
             </div>
           )}
@@ -151,8 +185,17 @@ function EventsPage() {
   if (status === 'loading') {
     return (
       <Layout activeTab="events">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+          <div
+            className="animate-spin"
+            style={{
+              width: '3rem',
+              height: '3rem',
+              borderRadius: '9999px',
+              border: '2px solid var(--accent)',
+              borderTopColor: 'transparent',
+            }}
+          />
         </div>
       </Layout>
     );
@@ -160,36 +203,56 @@ function EventsPage() {
 
   return (
     <Layout activeTab="events">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '2rem 1rem', background: 'var(--bg)', minHeight: '100vh' }}>
 
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-white" />
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <div style={{
+              width: '2.5rem',
+              height: '2.5rem',
+              borderRadius: '0.75rem',
+              background: 'var(--accent)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Calendar style={{ width: '1.25rem', height: '1.25rem', color: '#ffffff' }} />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Calendário de Eventos
+            <h1 style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              color: 'var(--text)',
+              letterSpacing: '0.05em',
+            }}>
+              Eventos
             </h1>
           </div>
-          <p className="text-slate-400 text-sm ml-13">
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '3.25rem' }}>
             Encontre eventos por região e data
           </p>
         </div>
 
         {/* Filtro de região */}
-        <div className="mb-6 flex flex-wrap gap-2 items-center">
-          <div className="flex items-center gap-2 text-slate-400 text-sm">
-            <Filter className="w-4 h-4" />
+        <div style={{ marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+            <Filter style={{ width: '1rem', height: '1rem' }} />
             <span>Região:</span>
           </div>
           <button
             onClick={() => setSelectedRegion('all')}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-              selectedRegion === 'all'
-                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/30'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
-            }`}
+            style={{
+              padding: '0.375rem 1rem',
+              borderRadius: '9999px',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              transition: 'all 0.2s',
+              cursor: 'pointer',
+              border: selectedRegion === 'all' ? 'none' : '1px solid var(--border)',
+              background: selectedRegion === 'all' ? 'var(--accent)' : 'var(--bg-card)',
+              color: selectedRegion === 'all' ? '#ffffff' : 'var(--text-muted)',
+            }}
           >
             Todas
           </button>
@@ -197,168 +260,281 @@ function EventsPage() {
             <button
               key={r}
               onClick={() => setSelectedRegion(r)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                selectedRegion === r
-                  ? 'bg-purple-600 text-white shadow-md shadow-purple-500/30'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
-              }`}
+              style={{
+                padding: '0.375rem 1rem',
+                borderRadius: '9999px',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                transition: 'all 0.2s',
+                cursor: 'pointer',
+                border: selectedRegion === r ? 'none' : '1px solid var(--border)',
+                background: selectedRegion === r ? 'var(--accent)' : 'var(--bg-card)',
+                color: selectedRegion === r ? '#ffffff' : 'var(--text-muted)',
+              }}
             >
               {r}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }} className="lg:grid-cols-3-custom">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+            <div style={{ display: 'contents' }}>
+              {/* Calendário + Painel lateral wrapper */}
+              <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: '1fr' }}>
 
-          {/* Calendário */}
-          <div className="lg:col-span-2 bg-slate-800/50 rounded-2xl border border-slate-700/50 p-4 sm:p-6">
-            {/* Navegação do mês */}
-            <div className="flex items-center justify-between mb-6">
-              <button
-                onClick={prevMonth}
-                className="w-9 h-9 rounded-lg bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5 text-slate-300" />
-              </button>
-              <h2 className="text-lg font-semibold text-white">
-                {MONTHS[currentMonth]} {currentYear}
-              </h2>
-              <button
-                onClick={nextMonth}
-                className="w-9 h-9 rounded-lg bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors"
-              >
-                <ChevronRight className="w-5 h-5 text-slate-300" />
-              </button>
-            </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'minmax(0,2fr) minmax(0,1fr)' }} className="calendar-grid">
 
-            {/* Cabeçalho dias da semana */}
-            <div className="grid grid-cols-7 mb-2">
-              {DAYS_OF_WEEK.map(d => (
-                <div key={d} className="text-center text-xs font-medium text-slate-500 py-1">
-                  {d}
-                </div>
-              ))}
-            </div>
-
-            {/* Grid de dias */}
-            {loading ? (
-              <div className="flex items-center justify-center h-48">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-7 gap-1">
-                {renderCalendar()}
-              </div>
-            )}
-          </div>
-
-          {/* Painel lateral */}
-          <div className="flex flex-col gap-4">
-
-            {/* Resumo do mês */}
-            <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 p-4">
-              <h3 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-                <Search className="w-4 h-4 text-purple-400" />
-                Este mês
-              </h3>
-              {loading ? (
-                <div className="text-slate-500 text-sm">Carregando...</div>
-              ) : events.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-4 text-center">
-                  <AlertCircle className="w-8 h-8 text-slate-600" />
-                  <p className="text-slate-400 text-sm">
-                    {selectedRegion !== 'all'
-                      ? `Nenhum evento encontrado em "${selectedRegion}" neste mês.`
-                      : 'Nenhum evento neste mês.'}
-                  </p>
-                  {selectedRegion !== 'all' && (
-                    <button
-                      onClick={() => setSelectedRegion('all')}
-                      className="text-purple-400 text-xs hover:text-purple-300 underline"
-                    >
-                      Ver todas as regiões
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <p className="text-purple-300 font-semibold text-lg">
-                  {events.length} evento{events.length !== 1 ? 's' : ''}
-                </p>
-              )}
-            </div>
-
-            {/* Eventos do dia selecionado */}
-            <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 p-4 flex-1">
-              <h3 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-purple-400" />
-                {selectedDay !== null
-                  ? `${selectedDay} de ${MONTHS[currentMonth]}`
-                  : 'Selecione um dia'}
-              </h3>
-
-              {selectedDay === null ? (
-                <p className="text-slate-500 text-sm text-center py-6">
-                  Clique em um dia no calendário para ver os eventos
-                </p>
-              ) : selectedDayEvents.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-4 text-center">
-                  <Calendar className="w-8 h-8 text-slate-600" />
-                  <p className="text-slate-400 text-sm">Nenhum evento neste dia.</p>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {selectedDayEvents.map(event => (
-                    <div
-                      key={event._id}
-                      className="bg-slate-700/50 rounded-xl p-3 border border-slate-600/50 hover:border-purple-500/40 transition-colors"
-                    >
-                      <h4 className="text-white font-medium text-sm mb-1">{event.title}</h4>
-                      <p className="text-slate-400 text-xs mb-2 line-clamp-2">{event.description}</p>
-                      <div className="flex items-center gap-1 text-xs text-slate-500">
-                        <MapPin className="w-3 h-3 text-purple-400" />
-                        <span>{event.location}</span>
-                        <span className="mx-1">·</span>
-                        <span className="text-purple-400">{event.region}</span>
+                    {/* Calendário */}
+                    <div style={{
+                      background: 'var(--bg-card)',
+                      borderRadius: '1rem',
+                      border: '1px solid var(--border)',
+                      padding: '1.5rem',
+                    }}>
+                      {/* Navegação do mês */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                        <button
+                          onClick={prevMonth}
+                          style={{
+                            width: '2.25rem',
+                            height: '2.25rem',
+                            borderRadius: '0.5rem',
+                            background: 'var(--bg-secondary)',
+                            border: '1px solid var(--border)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                          }}
+                        >
+                          <ChevronLeft style={{ width: '1.25rem', height: '1.25rem', color: 'var(--text)' }} />
+                        </button>
+                        <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)' }}>
+                          {MONTHS[currentMonth]} {currentYear}
+                        </h2>
+                        <button
+                          onClick={nextMonth}
+                          style={{
+                            width: '2.25rem',
+                            height: '2.25rem',
+                            borderRadius: '0.5rem',
+                            background: 'var(--bg-secondary)',
+                            border: '1px solid var(--border)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                          }}
+                        >
+                          <ChevronRight style={{ width: '1.25rem', height: '1.25rem', color: 'var(--text)' }} />
+                        </button>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
-                        <Clock className="w-3 h-3" />
-                        <span>
-                          {new Date(event.date).toLocaleTimeString('pt-BR', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </span>
+
+                      {/* Cabeçalho dias da semana */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: '0.5rem' }}>
+                        {DAYS_OF_WEEK.map(d => (
+                          <div key={d} style={{ textAlign: 'center', fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-muted)', padding: '0.25rem 0' }}>
+                            {d}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Grid de dias */}
+                      {loading ? (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '12rem' }}>
+                          <div
+                            className="animate-spin"
+                            style={{
+                              width: '2rem',
+                              height: '2rem',
+                              borderRadius: '9999px',
+                              border: '2px solid var(--accent)',
+                              borderTopColor: 'transparent',
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.25rem' }}>
+                          {renderCalendar()}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Painel lateral */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+                      {/* Resumo do mês */}
+                      <div style={{
+                        background: 'var(--bg-card)',
+                        borderRadius: '1rem',
+                        border: '1px solid var(--border)',
+                        padding: '1rem',
+                      }}>
+                        <h3 style={{
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          color: 'var(--text)',
+                          marginBottom: '0.75rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                        }}>
+                          <Search style={{ width: '1rem', height: '1rem', color: 'var(--accent)' }} />
+                          Este mês
+                        </h3>
+                        {loading ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Carregando...</div>
+                        ) : events.length === 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '1rem 0', textAlign: 'center' }}>
+                            <AlertCircle style={{ width: '2rem', height: '2rem', color: 'var(--border)' }} />
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                              {selectedRegion !== 'all'
+                                ? `Nenhum evento encontrado em "${selectedRegion}" neste mês.`
+                                : 'Nenhum evento neste mês.'}
+                            </p>
+                            {selectedRegion !== 'all' && (
+                              <button
+                                onClick={() => setSelectedRegion('all')}
+                                style={{
+                                  color: 'var(--accent)',
+                                  fontSize: '0.75rem',
+                                  textDecoration: 'underline',
+                                  background: 'none',
+                                  border: 'none',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                Ver todas as regiões
+                              </button>
+                            )}
+                          </div>
+                        ) : (
+                          <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1.125rem' }}>
+                            {events.length} evento{events.length !== 1 ? 's' : ''}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Eventos do dia selecionado */}
+                      <div style={{
+                        background: 'var(--bg-card)',
+                        borderRadius: '1rem',
+                        border: '1px solid var(--border)',
+                        padding: '1rem',
+                        flex: 1,
+                      }}>
+                        <h3 style={{
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          color: 'var(--text)',
+                          marginBottom: '0.75rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                        }}>
+                          <Clock style={{ width: '1rem', height: '1rem', color: 'var(--accent)' }} />
+                          {selectedDay !== null
+                            ? `${selectedDay} de ${MONTHS[currentMonth]}`
+                            : 'Selecione um dia'}
+                        </h3>
+
+                        {selectedDay === null ? (
+                          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textAlign: 'center', padding: '1.5rem 0' }}>
+                            Clique em um dia no calendário para ver os eventos
+                          </p>
+                        ) : selectedDayEvents.length === 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '1rem 0', textAlign: 'center' }}>
+                            <Calendar style={{ width: '2rem', height: '2rem', color: 'var(--border)' }} />
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Nenhum evento neste dia.</p>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            {selectedDayEvents.map(event => (
+                              <div
+                                key={event._id}
+                                style={{
+                                  background: 'var(--bg-secondary)',
+                                  borderRadius: '0.75rem',
+                                  padding: '0.75rem',
+                                  border: '1px solid var(--border)',
+                                  transition: 'border-color 0.2s',
+                                }}
+                              >
+                                <h4 style={{ color: 'var(--text)', fontWeight: 500, fontSize: '0.875rem', marginBottom: '0.25rem' }}>{event.title}</h4>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.5rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{event.description}</p>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                  <MapPin style={{ width: '0.75rem', height: '0.75rem', color: 'var(--accent)' }} />
+                                  <span>{event.location}</span>
+                                  <span style={{ margin: '0 0.25rem' }}>·</span>
+                                  <span style={{ color: 'var(--teal)' }}>{event.region}</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                                  <Clock style={{ width: '0.75rem', height: '0.75rem' }} />
+                                  <span>
+                                    {new Date(event.date).toLocaleTimeString('pt-BR', {
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  ))}
+
+                  </div>
                 </div>
-              )}
+
+              </div>
             </div>
           </div>
         </div>
 
         {/* Lista de todos os eventos do mês */}
         {!loading && events.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-white mb-4">
+          <div style={{ marginTop: '2rem' }}>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Todos os eventos — {MONTHS[currentMonth]} {currentYear}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
               {events.map(event => (
                 <div
                   key={event._id}
-                  className="bg-slate-800/50 rounded-2xl border border-slate-700/50 p-4 hover:border-purple-500/40 transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/10"
+                  style={{
+                    background: 'var(--bg-card)',
+                    borderRadius: '1rem',
+                    border: '1px solid var(--border)',
+                    padding: '1rem',
+                    transition: 'border-color 0.2s',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--teal)')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
                 >
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="text-white font-semibold text-sm">{event.title}</h4>
-                    <span className="text-xs bg-purple-900/40 text-purple-300 border border-purple-500/30 rounded-full px-2 py-0.5 whitespace-nowrap">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <h4 style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem' }}>{event.title}</h4>
+                    <span style={{
+                      fontSize: '0.75rem',
+                      background: 'var(--teal-subtle)',
+                      color: 'var(--teal)',
+                      border: '1px solid var(--teal)',
+                      borderRadius: '9999px',
+                      padding: '0.125rem 0.5rem',
+                      whiteSpace: 'nowrap',
+                    }}>
                       {event.region}
                     </span>
                   </div>
-                  <p className="text-slate-400 text-xs mb-3 line-clamp-2">{event.description}</p>
-                  <div className="flex flex-col gap-1 text-xs text-slate-500">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-purple-400" />
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.75rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{event.description}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <Calendar style={{ width: '0.75rem', height: '0.75rem', color: 'var(--accent)' }} />
                       <span>
                         {new Date(event.date).toLocaleDateString('pt-BR', {
                           day: '2-digit',
@@ -367,8 +543,8 @@ function EventsPage() {
                         })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <Clock style={{ width: '0.75rem', height: '0.75rem' }} />
                       <span>
                         {new Date(event.date).toLocaleTimeString('pt-BR', {
                           hour: '2-digit',
@@ -376,8 +552,8 @@ function EventsPage() {
                         })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-purple-400" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <MapPin style={{ width: '0.75rem', height: '0.75rem', color: 'var(--accent)' }} />
                       <span>{event.location}</span>
                     </div>
                   </div>
@@ -389,9 +565,18 @@ function EventsPage() {
 
         {/* Erro */}
         {error && (
-          <div className="mt-6 flex items-center gap-3 bg-red-900/20 border border-red-500/30 rounded-xl p-4">
-            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-            <p className="text-red-300 text-sm">{error}</p>
+          <div style={{
+            marginTop: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            background: 'var(--accent-subtle)',
+            border: '1px solid var(--accent)',
+            borderRadius: '0.75rem',
+            padding: '1rem',
+          }}>
+            <AlertCircle style={{ width: '1.25rem', height: '1.25rem', color: 'var(--accent)', flexShrink: 0 }} />
+            <p style={{ color: 'var(--accent)', fontSize: '0.875rem' }}>{error}</p>
           </div>
         )}
       </div>

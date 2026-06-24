@@ -1,5 +1,6 @@
 import React from 'react';
 import { IPlan } from '@/lib/models/Plan';
+import { ArrowRight, Check } from 'lucide-react';
 
 interface PlanCardProps {
   plan: IPlan;
@@ -10,144 +11,127 @@ interface PlanCardProps {
   currentPlanId?: string;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({ 
-  plan, 
-  billing, 
-  onSelect, 
-  isPopular = false, 
-  loading = false,
-  currentPlanId 
+const PlanCard: React.FC<PlanCardProps> = ({
+  plan, billing, onSelect, isPopular = false, loading = false, currentPlanId
 }) => {
   const price = billing === 'annual' ? plan.annualPrice : plan.monthlyPrice;
   const isCurrentPlan = currentPlanId === plan._id.toString();
 
-  if (!price) {
-    return null;
-  }
+  if (!price) return null;
 
-  const formatPrice = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
-  };
-
-  const getOriginalPrice = () => {
-    return price * 1.38; // Calcula o preço "original" para mostrar desconto
-  };
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
   return (
-    <div className={`
-      relative rounded-2xl p-8 transition-all duration-300
-      ${isPopular 
-        ? 'bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-purple-500/50 shadow-xl shadow-purple-500/20' 
-        : 'bg-slate-800/50 border border-slate-700/50'
-      }
-      ${isCurrentPlan ? 'ring-2 ring-green-500' : ''}
-      hover:scale-105
-    `}>
-      {/* Popular Badge */}
+    <div
+      className="relative flex flex-col p-6 transition-all duration-200"
+      style={{
+        backgroundColor: 'var(--dark-card-2)',
+        border: isPopular ? '1px solid var(--teal)' : '1px solid #333',
+        borderRadius: 16,
+      }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = isPopular ? 'var(--teal)' : '#333'; }}
+    >
+      {/* Popular Badges */}
       {isPopular && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">
-          ⭐ Melhor Plano
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 whitespace-nowrap">
+          <span className="px-3 py-1 rounded-full text-xs font-bold text-white"
+            style={{ backgroundColor: 'var(--accent)' }}>
+            O MAIS HYPADO 🔥
+          </span>
+          <span className="px-3 py-1 rounded-full text-xs font-bold"
+            style={{ backgroundColor: 'var(--teal)', color: '#111' }}>
+            MELHOR PREÇO
           </span>
         </div>
       )}
 
       {/* Current Plan Badge */}
       {isCurrentPlan && (
-        <div className="absolute -top-3 right-4">
-          <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-            Plano Atual
+        <div className="absolute -top-3.5 right-4">
+          <span className="px-3 py-1 rounded-full text-xs font-bold"
+            style={{ backgroundColor: 'var(--teal)', color: '#111' }}>
+            Plano Atual ✓
           </span>
         </div>
       )}
 
-      {/* Header */}
-      <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-        <p className="text-slate-400 text-sm">{plan.description}</p>
+      {/* Logo Mark */}
+      <div className="font-black text-lg mb-3 italic" style={{ color: 'var(--teal)' }}>A!</div>
+
+      {/* Plan Name */}
+      <h3 className="text-2xl font-black uppercase text-white mb-1 flex items-center justify-between">
+        {plan.name}
+        <ArrowRight className="w-5 h-5" style={{ color: '#666' }} />
+      </h3>
+
+      {/* Price */}
+      <div className="mb-1">
+        <span className="text-2xl font-bold" style={{ color: 'var(--teal)' }}>
+          {formatPrice(price)}
+        </span>
+        <span className="text-sm ml-1" style={{ color: '#888' }}>/mês</span>
       </div>
 
-      {/* Pricing */}
-      <div className="text-center mb-8">
-        {/* Original Price (strikethrough) */}
-        <div className="mb-2">
-          <span className="text-2xl font-bold text-slate-500 line-through">
-            {formatPrice(getOriginalPrice())}
-          </span>
-        </div>
-        
-        {/* Current Price */}
-        <div className="flex items-baseline justify-center gap-1 mb-3">
-          <span className="text-4xl font-bold text-white">
-            {formatPrice(price)}
-          </span>
-          <span className="text-slate-400 text-lg">
-            /mês
-          </span>
-        </div>
+      {/* Billing info */}
+      {billing === 'annual' && plan.annualPrice && (
+        <p className="text-xs mb-1" style={{ color: '#888' }}>
+          Ou {formatPrice(plan.annualPrice)} por ano
+        </p>
+      )}
+      <p className="text-xs mb-4" style={{ color: '#888' }}>
+        No PIX, Débito ou Crédito
+      </p>
 
-        {/* Trial Badge */}
-        {plan.trialDays && plan.trialDays > 0 && (
-          <div className="inline-block">
-            <span className="bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-sm font-medium border border-yellow-500/30">
-              {plan.trialDays} dias grátis
-            </span>
-          </div>
-        )}
-      </div>
+      {/* Description */}
+      <p className="text-sm font-medium text-white mb-5 leading-relaxed flex-1">
+        {plan.description}
+      </p>
+
+      {/* Trial badge */}
+      {plan.trialDays !== undefined && plan.trialDays > 0 && (
+        <span className="mb-4 inline-block text-xs font-bold px-3 py-1 rounded-full"
+          style={{ backgroundColor: 'rgba(0,201,177,0.15)', color: 'var(--teal)' }}>
+          {plan.trialDays} dias grátis
+        </span>
+      )}
 
       {/* Features */}
-      <div className="space-y-4 mb-8">
-        {plan.features.map((feature, index) => (
-          <div key={index} className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center mt-0.5">
-              <svg 
-                className="w-3 h-3 text-green-400" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={3} 
-                  d="M5 13l4 4L19 7" 
-                />
-              </svg>
-            </div>
-            <span className="text-slate-300 text-sm leading-relaxed">{feature}</span>
-          </div>
-        ))}
-      </div>
+      {plan.features && plan.features.length > 0 && (
+        <ul className="space-y-2 mb-6">
+          {plan.features.map((feature, index) => (
+            <li key={index} className="flex items-start gap-2 text-sm" style={{ color: '#aaa' }}>
+              <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--teal)' }} />
+              {feature}
+            </li>
+          ))}
+        </ul>
+      )}
 
-      {/* Button */}
+      {/* CTA Button */}
       <button
         onClick={() => onSelect(plan._id.toString(), billing)}
         disabled={loading || isCurrentPlan}
-        className={`
-          w-full py-3.5 px-6 rounded-xl font-semibold transition-all duration-200 text-base
-          ${loading || isCurrentPlan
-            ? 'bg-slate-700/50 text-slate-500 cursor-not-allowed' 
-            : isPopular
-            ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl'
-            : 'bg-slate-700 hover:bg-slate-600 text-white'
-          }
-        `}
+        className="w-full py-3 px-5 rounded-xl text-sm font-bold flex items-center justify-between transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        style={
+          isCurrentPlan
+            ? { backgroundColor: '#333', color: '#666', cursor: 'not-allowed' }
+            : { backgroundColor: 'var(--accent)', color: 'white' }
+        }
       >
         {loading ? (
-          <div className="flex items-center justify-center">
-            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+          <div className="flex items-center gap-2 w-full justify-center">
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Processando...
           </div>
         ) : isCurrentPlan ? (
-          'Plano Ativo'
+          <span className="w-full text-center">Plano Ativo</span>
         ) : (
-          'Fazer Upgrade'
+          <>
+            <span>Assinar</span>
+            <ArrowRight className="w-4 h-4" />
+          </>
         )}
       </button>
     </div>

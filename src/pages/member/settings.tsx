@@ -5,10 +5,10 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { signOut } from 'next-auth/react';
 import Layout from '@/components/Layout';
 import { useState } from 'react';
-import { 
-  User, 
-  Trash2, 
-  AlertTriangle, 
+import {
+  User,
+  Trash2,
+  AlertTriangle,
   Shield,
   Mail,
   X,
@@ -52,9 +52,9 @@ export default function SettingsPage({ user }: SettingsPageProps) {
       }
 
       // Deslogar e redirecionar
-      await signOut({ 
+      await signOut({
         callbackUrl: '/?deleted=true',
-        redirect: true 
+        redirect: true
       });
     } catch (error) {
       console.error('Error deleting account:', error);
@@ -65,111 +65,220 @@ export default function SettingsPage({ user }: SettingsPageProps) {
 
   return (
     <Layout activeTab="settings">
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
-          
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundColor: 'var(--bg)',
+          padding: '1.5rem',
+        }}
+      >
+        <div style={{ maxWidth: '56rem', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1
+              style={{
+                fontSize: '1.875rem',
+                fontWeight: 800,
+                color: 'var(--text)',
+                textTransform: 'uppercase',
+                marginBottom: '0.5rem',
+                margin: '0 0 0.5rem 0',
+              }}
+            >
               Configurações da Conta
             </h1>
-            <p className="text-slate-400">
+            <p style={{ color: 'var(--text-muted)', margin: 0 }}>
               Gerencie suas informações e preferências
             </p>
           </div>
 
           {/* Perfil do Usuário */}
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <User className="w-5 h-5" />
+          <div
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: '16px',
+              padding: '1.5rem',
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: 'var(--text)',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                margin: '0 0 1rem 0',
+              }}
+            >
+              <User style={{ width: '1.25rem', height: '1.25rem' }} />
               Informações da Conta
             </h2>
-            
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 {user.image ? (
-                  <img 
-                    src={user.image} 
+                  <img
+                    src={user.image}
                     alt={user.name}
-                    className="w-16 h-16 rounded-full border-2 border-purple-500/30"
+                    style={{
+                      width: '4rem',
+                      height: '4rem',
+                      borderRadius: '50%',
+                      border: '2px solid var(--border)',
+                    }}
                   />
                 ) : (
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                    <User className="w-8 h-8 text-white" />
+                  <div
+                    style={{
+                      width: '4rem',
+                      height: '4rem',
+                      backgroundColor: 'var(--accent)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <User style={{ width: '2rem', height: '2rem', color: 'white' }} />
                   </div>
                 )}
                 <div>
-                  <p className="text-white font-medium text-lg">{user.name}</p>
-                  <p className="text-slate-400 text-sm">{user.email}</p>
+                  <p style={{ color: 'var(--text)', fontWeight: 600, fontSize: '1.125rem', margin: '0 0 0.25rem 0' }}>
+                    {user.name}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: 0 }}>
+                    {user.email}
+                  </p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-700">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-slate-500 text-sm mb-1">Nome</p>
-                    <p className="text-white">{user.name}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500 text-sm mb-1">Email</p>
-                    <p className="text-white">{user.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500 text-sm mb-1">Membro desde</p>
-                    <p className="text-white">
-                      {new Date(user.createdAt).toLocaleDateString('pt-BR')}
-                    </p>
-                  </div>
+              <div
+                style={{
+                  paddingTop: '1rem',
+                  borderTop: '1px solid var(--border)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '1rem',
+                }}
+              >
+                <div>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem', margin: '0 0 0.25rem 0' }}>
+                    Nome
+                  </p>
+                  <p style={{ color: 'var(--text)', margin: 0 }}>{user.name}</p>
+                </div>
+                <div>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem', margin: '0 0 0.25rem 0' }}>
+                    Email
+                  </p>
+                  <p style={{ color: 'var(--text)', margin: 0 }}>{user.email}</p>
+                </div>
+                <div>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem', margin: '0 0 0.25rem 0' }}>
+                    Membro desde
+                  </p>
+                  <p style={{ color: 'var(--text)', margin: 0 }}>
+                    {new Date(user.createdAt).toLocaleDateString('pt-BR')}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Zona de Perigo */}
-          <div className="bg-red-900/20 border-2 border-red-500/50 rounded-xl p-6">
-            <h2 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5" />
+          <div
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '2px solid var(--accent)',
+              borderRadius: '16px',
+              padding: '1.5rem',
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: 'var(--accent)',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                margin: '0 0 1rem 0',
+              }}
+            >
+              <AlertTriangle style={{ width: '1.25rem', height: '1.25rem' }} />
               Zona de Perigo
             </h2>
-            
-            <div className="space-y-4">
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <h3 className="text-white font-medium mb-2">Deletar Conta</h3>
-                <p className="text-slate-400 text-sm mb-4">
-                  Esta ação é <strong className="text-red-400">permanente e irreversível</strong>. 
+                <h3 style={{ color: 'var(--text)', fontWeight: 600, marginBottom: '0.5rem', margin: '0 0 0.5rem 0' }}>
+                  Deletar Conta
+                </h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem', margin: '0 0 1rem 0' }}>
+                  Esta ação é <strong style={{ color: 'var(--accent)' }}>permanente e irreversível</strong>.{' '}
                   Todos os seus dados serão removidos permanentemente do sistema de acordo com a LGPD.
                 </p>
-                
-                <div className="bg-slate-900/50 rounded-lg p-4 mb-4">
-                  <h4 className="text-white font-medium mb-2 flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-purple-400" />
+
+                <div
+                  style={{
+                    backgroundColor: 'var(--bg-secondary)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  <h4
+                    style={{
+                      color: 'var(--text)',
+                      fontWeight: 600,
+                      marginBottom: '0.75rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      margin: '0 0 0.75rem 0',
+                    }}
+                  >
+                    <Shield style={{ width: '1rem', height: '1rem', color: 'var(--text-muted)' }} />
                     O que será deletado:
                   </h4>
-                  <ul className="space-y-2 text-sm text-slate-300">
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      Todas as suas informações pessoais
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      Histórico de assinaturas e pagamentos
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      Acesso a todo conteúdo exclusivo
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      Todos os dados associados à sua conta
-                    </li>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {[
+                      'Todas as suas informações pessoais',
+                      'Histórico de assinaturas e pagamentos',
+                      'Acesso a todo conteúdo exclusivo',
+                      'Todos os dados associados à sua conta',
+                    ].map((item, i) => (
+                      <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text)' }}>
+                        <Check style={{ width: '1rem', height: '1rem', color: 'var(--accent)', marginTop: '0.125rem', flexShrink: 0 }} />
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 <button
                   onClick={() => setIsDeleteModalOpen(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all duration-200 hover:scale-105"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.75rem 1.5rem',
+                    backgroundColor: 'var(--accent)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                  }}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 style={{ width: '1rem', height: '1rem' }} />
                   Deletar Minha Conta
                 </button>
               </div>
@@ -180,44 +289,102 @@ export default function SettingsPage({ user }: SettingsPageProps) {
 
       {/* Modal de Confirmação */}
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-800 border-2 border-red-500/50 rounded-2xl p-8 max-w-md w-full">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-red-400" />
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            zIndex: 50,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '2px solid var(--accent)',
+              borderRadius: '16px',
+              padding: '2rem',
+              maxWidth: '28rem',
+              width: '100%',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div
+                  style={{
+                    width: '3rem',
+                    height: '3rem',
+                    backgroundColor: 'var(--accent-subtle)',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <AlertTriangle style={{ width: '1.5rem', height: '1.5rem', color: 'var(--accent)' }} />
                 </div>
-                <h3 className="text-2xl font-bold text-white">
+                <h3
+                  style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 800,
+                    color: 'var(--text)',
+                    margin: 0,
+                  }}
+                >
                   Confirmar Exclusão
                 </h3>
               </div>
-              <button 
+              <button
                 onClick={() => {
                   setIsDeleteModalOpen(false);
                   setConfirmText('');
                   setError('');
                 }}
-                className="text-slate-400 hover:text-white"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: isDeleting ? 'not-allowed' : 'pointer',
+                  padding: '0.25rem',
+                }}
                 disabled={isDeleting}
               >
-                <X className="w-6 h-6" />
+                <X style={{ width: '1.5rem', height: '1.5rem' }} />
               </button>
             </div>
 
-            <div className="space-y-4 mb-6">
-              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
-                <p className="text-red-400 font-medium mb-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div
+                style={{
+                  backgroundColor: 'var(--accent-subtle)',
+                  border: '1px solid var(--accent)',
+                  borderRadius: '10px',
+                  padding: '1rem',
+                }}
+              >
+                <p style={{ color: 'var(--accent)', fontWeight: 600, marginBottom: '0.5rem', margin: '0 0 0.5rem 0' }}>
                   ⚠️ Esta ação não pode ser desfeita!
                 </p>
-                <p className="text-slate-300 text-sm">
-                  Todos os seus dados serão <strong>permanentemente removidos</strong> do sistema 
+                <p style={{ color: 'var(--text)', fontSize: '0.875rem', margin: 0 }}>
+                  Todos os seus dados serão <strong>permanentemente removidos</strong> do sistema
                   e você será deslogado automaticamente.
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Digite <span className="text-red-400 font-bold">DELETAR</span> para confirmar:
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    color: 'var(--text)',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  Digite <span style={{ color: 'var(--accent)', fontWeight: 700 }}>DELETAR</span> para confirmar:
                 </label>
                 <input
                   type="text"
@@ -226,7 +393,17 @@ export default function SettingsPage({ user }: SettingsPageProps) {
                     setConfirmText(e.target.value);
                     setError('');
                   }}
-                  className="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    backgroundColor: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '10px',
+                    color: 'var(--text)',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
                   placeholder="Digite DELETAR"
                   disabled={isDeleting}
                   autoFocus
@@ -234,20 +411,39 @@ export default function SettingsPage({ user }: SettingsPageProps) {
               </div>
 
               {error && (
-                <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                <div
+                  style={{
+                    padding: '0.75rem',
+                    backgroundColor: 'var(--accent-subtle)',
+                    border: '1px solid var(--accent)',
+                    borderRadius: '10px',
+                    color: 'var(--accent)',
+                    fontSize: '0.875rem',
+                  }}
+                >
                   {error}
                 </div>
               )}
             </div>
 
-            <div className="flex gap-3">
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 onClick={() => {
                   setIsDeleteModalOpen(false);
                   setConfirmText('');
                   setError('');
                 }}
-                className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+                style={{
+                  flex: 1,
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: 'var(--bg-secondary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '10px',
+                  color: 'var(--text)',
+                  fontWeight: 700,
+                  cursor: isDeleting ? 'not-allowed' : 'pointer',
+                  fontSize: '0.95rem',
+                }}
                 disabled={isDeleting}
               >
                 Cancelar
@@ -255,16 +451,40 @@ export default function SettingsPage({ user }: SettingsPageProps) {
               <button
                 onClick={handleDeleteAccount}
                 disabled={isDeleting || confirmText !== 'DELETAR'}
-                className="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                style={{
+                  flex: 1,
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: 'var(--accent)',
+                  border: 'none',
+                  borderRadius: '10px',
+                  color: 'white',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  cursor: isDeleting || confirmText !== 'DELETAR' ? 'not-allowed' : 'pointer',
+                  opacity: isDeleting || confirmText !== 'DELETAR' ? 0.5 : 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                }}
               >
                 {isDeleting ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div
+                      style={{
+                        width: '1rem',
+                        height: '1rem',
+                        border: '2px solid rgba(255,255,255,0.3)',
+                        borderTopColor: 'white',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s linear infinite',
+                      }}
+                    />
                     Deletando...
                   </>
                 ) : (
                   <>
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 style={{ width: '1rem', height: '1rem' }} />
                     Deletar Conta
                   </>
                 )}

@@ -65,13 +65,13 @@ function MyContentPage() {
   const [currentTab, setCurrentTab] = useState("all");
 
   const contentTypes = [
-    { value: "Article", label: "Article", icon: FileText, action: "Read" },
-    { value: "Video", label: "Video", icon: Video, action: "Watch" },
-    { value: "Event", label: "Event", icon: Calendar, action: "Join" },
-    { value: "Podcast", label: "Podcast", icon: Headphones, action: "Listen" },
-    { value: "Course", label: "Course", icon: BookOpen, action: "Start" },
-    { value: "Webinar", label: "Webinar", icon: Monitor, action: "Watch" },
-    { value: "Other", label: "Other", icon: Archive, action: "View More" },
+    { value: "Article", label: "Artigo", icon: FileText, action: "Ler" },
+    { value: "Video", label: "Vídeo", icon: Video, action: "Assistir" },
+    { value: "Event", label: "Evento", icon: Calendar, action: "Participar" },
+    { value: "Podcast", label: "Podcast", icon: Headphones, action: "Ouvir" },
+    { value: "Course", label: "Curso", icon: BookOpen, action: "Começar" },
+    { value: "Webinar", label: "Webinar", icon: Monitor, action: "Assistir" },
+    { value: "Other", label: "Outro", icon: Archive, action: "Ver Mais" },
   ];
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function MyContentPage() {
   const fetchContents = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const timestamp = new Date().getTime();
       const res = await fetch(`/api/member/content?t=${timestamp}`, {
@@ -98,22 +98,22 @@ function MyContentPage() {
           'Pragma': 'no-cache'
         }
       });
-      
+
       const data = await res.json();
-      
+
       if (data.success) {
         console.log('📋 Content loaded:', {
           total: data.data.length,
           accessible: data.data.filter((c: any) => c.hasAccess).length
         });
-        
+
         setContents(data.data);
       } else {
         setError(data.message);
       }
     } catch (err: any) {
       console.error('❌ Error loading content:', err);
-      setError(err.message || 'Error loading content');
+      setError(err.message || 'Erro ao carregar conteúdo');
     } finally {
       setLoading(false);
     }
@@ -179,7 +179,7 @@ function MyContentPage() {
             new Date(b.publishDate).getTime() -
             new Date(a.publishDate).getTime()
           );
-      } 
+      }
     });
 
     setFilteredContents(filtered);
@@ -227,75 +227,130 @@ function MyContentPage() {
     return contentTypes.find((t) => t.value === type) || contentTypes[0];
   };
 
+  const typeIconColors: Record<string, string> = {
+    Article: '#3b82f6',
+    Video: '#e8192c',
+    Event: '#8b5cf6',
+    Podcast: '#22c55e',
+    Course: '#f97316',
+    Webinar: '#6366f1',
+    Other: '#6b7280',
+  };
+
   const ContentCard = ({ content }: { content: Content }) => {
     const typeConfig = getTypeConfig(content.type);
     const IconComponent = typeConfig.icon;
+    const iconBg = content.hasAccess
+      ? (typeIconColors[typeConfig.value] || '#6b7280')
+      : '#9ca3af';
 
     return (
       <div
-        className={`bg-slate-800/50 backdrop-blur-sm border ${
-          !content.hasAccess ? "border-red-500/30" : "border-slate-700/50"
-        } rounded-2xl p-6 hover:bg-slate-800/70 transition-all duration-300 hover:scale-[1.02] group cursor-pointer`}
+        style={{
+          backgroundColor: 'var(--bg-card)',
+          border: `1px solid ${!content.hasAccess ? 'var(--accent)' : 'var(--border)'}`,
+          borderRadius: '16px',
+          padding: '1.5rem',
+          cursor: 'pointer',
+          transition: 'box-shadow 0.2s',
+        }}
         onClick={() => handleContentClick(content)}
       >
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1rem' }}>
           <div
-            className={`w-12 h-12 rounded-xl bg-gradient-to-r ${
-              content.hasAccess
-                ? typeConfig.value === "Article"
-                  ? "from-blue-500 to-blue-600"
-                  : typeConfig.value === "Video"
-                  ? "from-red-500 to-red-600"
-                  : typeConfig.value === "Event"
-                  ? "from-purple-500 to-purple-600"
-                  : typeConfig.value === "Podcast"
-                  ? "from-green-500 to-green-600"
-                  : typeConfig.value === "Course"
-                  ? "from-orange-500 to-orange-600"
-                  : typeConfig.value === "Webinar"
-                  ? "from-indigo-500 to-indigo-600"
-                  : "from-gray-500 to-gray-600"
-                : "from-gray-600 to-gray-700"
-            } flex items-center justify-center shadow-lg`}
+            style={{
+              width: '3rem',
+              height: '3rem',
+              borderRadius: '12px',
+              backgroundColor: iconBg,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
           >
-            <IconComponent className="w-6 h-6 text-white" />
+            <IconComponent style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {/* Favorite Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 toggleFavorite(content._id);
               }}
-              className={`p-2 rounded-full transition-colors ${
-                content.isFavorite
-                  ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                  : "bg-slate-700/50 text-slate-400 hover:bg-slate-700"
-              }`}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '50%',
+                border: 'none',
+                backgroundColor: content.isFavorite ? 'var(--accent-subtle)' : 'var(--bg-secondary)',
+                color: content.isFavorite ? 'var(--accent)' : 'var(--text-muted)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              {content.isFavorite ? (
-                <Heart className="w-4 h-4 fill-current" />
-              ) : (
-                <Heart className="w-4 h-4" />
-              )}
+              <Heart
+                style={{
+                  width: '1rem',
+                  height: '1rem',
+                  fill: content.isFavorite ? 'var(--accent)' : 'none',
+                }}
+              />
             </button>
 
             {/* Access Status */}
             {!content.hasAccess ? (
-              <div className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
-                <Lock className="w-3 h-3" />
-                Restricted
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.25rem 0.625rem',
+                  borderRadius: '999px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor: 'var(--accent-subtle)',
+                  color: 'var(--accent)',
+                }}
+              >
+                <Lock style={{ width: '0.75rem', height: '0.75rem' }} />
+                Restrito
               </div>
             ) : content.restricted ? (
-              <div className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400">
-                <Crown className="w-3 h-3" />
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.25rem 0.625rem',
+                  borderRadius: '999px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor: 'var(--teal-subtle)',
+                  color: 'var(--teal)',
+                }}
+              >
+                <Crown style={{ width: '0.75rem', height: '0.75rem' }} />
                 Premium
               </div>
             ) : (
-              <div className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
-                <Eye className="w-3 h-3" />
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.25rem 0.625rem',
+                  borderRadius: '999px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor: '#dcfce7',
+                  color: '#16a34a',
+                }}
+              >
+                <Eye style={{ width: '0.75rem', height: '0.75rem' }} />
                 Free
               </div>
             )}
@@ -303,30 +358,48 @@ function MyContentPage() {
         </div>
 
         {/* Content */}
-        <div className="mb-4">
+        <div style={{ marginBottom: '1rem' }}>
           <h3
-            className={`text-lg font-bold mb-2 line-clamp-2 ${
-              content.hasAccess ? "text-white" : "text-slate-400"
-            }`}
+            style={{
+              fontSize: '1.05rem',
+              fontWeight: 700,
+              marginBottom: '0.5rem',
+              margin: '0 0 0.5rem 0',
+              color: content.hasAccess ? 'var(--text)' : 'var(--text-muted)',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
           >
             {content.title}
           </h3>
-          <p className="text-slate-400 text-sm line-clamp-3 mb-3">
+          <p
+            style={{
+              color: 'var(--text-muted)',
+              fontSize: '0.875rem',
+              margin: '0 0 0.75rem 0',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
             {content.description}
           </p>
 
-          <div className="flex items-center gap-4 text-xs text-slate-500">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              {new Date(content.publishDate).toLocaleDateString("en-US")}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <Calendar style={{ width: '0.75rem', height: '0.75rem' }} />
+              {new Date(content.publishDate).toLocaleDateString("pt-BR")}
             </span>
-            <span className="flex items-center gap-1">
-              <Eye className="w-3 h-3" />
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <Eye style={{ width: '0.75rem', height: '0.75rem' }} />
               {content.views || 0}
             </span>
             {content.plan && (
-              <span className="flex items-center gap-1">
-                <Crown className="w-3 h-3" />
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <Crown style={{ width: '0.75rem', height: '0.75rem' }} />
                 {content.plan.name}
               </span>
             )}
@@ -334,20 +407,52 @@ function MyContentPage() {
         </div>
 
         {/* Action Button */}
-        <div className="pt-4 border-t border-slate-700">
+        <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
           {!content.hasAccess ? (
-            <div className="text-center">
-              <p className="text-red-400 text-sm mb-2">
-                Upgrade required to access
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ color: 'var(--accent)', fontSize: '0.875rem', marginBottom: '0.5rem', margin: '0 0 0.5rem 0' }}>
+                Assine um plano para acessar
               </p>
-              <button className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
-                <Crown className="w-4 h-4" />
-                Upgrade Plan
+              <button
+                style={{
+                  width: '100%',
+                  backgroundColor: 'var(--accent)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '10px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.95rem',
+                }}
+              >
+                <Crown style={{ width: '1rem', height: '1rem' }} />
+                Assinar Plano
               </button>
             </div>
           ) : (
-            <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2">
-              <Play className="w-4 h-4" />
+            <button
+              style={{
+                width: '100%',
+                backgroundColor: 'var(--accent)',
+                color: 'white',
+                border: 'none',
+                padding: '0.5rem 1rem',
+                borderRadius: '10px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                fontSize: '0.95rem',
+              }}
+            >
+              <Play style={{ width: '1rem', height: '1rem' }} />
               {typeConfig.action}
             </button>
           )}
@@ -359,10 +464,20 @@ function MyContentPage() {
   if (status === "loading" || loading) {
     return (
       <Layout activeTab="member-content">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-slate-300 text-lg">Loading content...</p>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg)' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div
+              style={{
+                width: '4rem',
+                height: '4rem',
+                border: '4px solid var(--border)',
+                borderTopColor: 'var(--accent)',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite',
+                margin: '0 auto 1rem',
+              }}
+            />
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', margin: 0 }}>Carregando conteúdo...</p>
           </div>
         </div>
       </Layout>
@@ -372,239 +487,416 @@ function MyContentPage() {
   if (!session) {
     return (
       <Layout activeTab="member-content">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center bg-red-500/10 border border-red-500/20 rounded-2xl p-8">
-            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-            <p className="text-red-400 text-lg">Access denied</p>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg)' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              backgroundColor: 'var(--accent-subtle)',
+              border: '1px solid var(--accent)',
+              borderRadius: '16px',
+              padding: '2rem',
+            }}
+          >
+            <AlertCircle style={{ width: '4rem', height: '4rem', color: 'var(--accent)', margin: '0 auto 1rem' }} />
+            <p style={{ color: 'var(--accent)', fontSize: '1.125rem', margin: 0 }}>Acesso negado</p>
           </div>
         </div>
       </Layout>
     );
   }
 
+  const tabs = [
+    { key: "all", label: "Todo Conteúdo", icon: Book },
+    { key: "accessible", label: "Disponível", icon: Eye },
+    { key: "favorites", label: "Favoritos", icon: Heart },
+    { key: "recent", label: "Recentes", icon: Clock },
+  ];
+
+  const tabLabelMap: Record<string, string> = {
+    all: "Todo Conteúdo",
+    favorites: "Favoritos",
+    accessible: "Disponível",
+    recent: "Recentes",
+  };
+
   return (
     <Layout activeTab="member-content">
-      <div className="container mx-auto p-4 lg:p-6 max-w-7xl space-y-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="text-center flex-1">
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
-              My Content
-            </h1>
-            <p className="text-slate-400">
-              Explore and access your exclusive content
-            </p>
-          </div>
+      <div
+        style={{
+          backgroundColor: 'var(--bg)',
+          minHeight: '100vh',
+          padding: '1rem 1.5rem',
+        }}
+      >
+        <div style={{ maxWidth: '80rem', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-          {/* BOTÃO DE REFRESH */}
-          <button
-            onClick={handleRefreshContent}
-            disabled={loading}
-            className="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-            title="Refresh content"
-          >
-            <RotateCcw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh
-          </button>
-        </div>
-
-        {/* Error Alert */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-400" />
-            <p className="text-red-400">{error}</p>
-            <button
-              onClick={() => setError(null)}
-              className="ml-auto text-red-400 hover:text-red-300"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
-        {/* Content Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {[
-            { key: "all", label: "All Content", icon: Book },
-            { key: "accessible", label: "Accessible", icon: Eye },
-            { key: "favorites", label: "Favorites", icon: Heart },
-            { key: "recent", label: "Recent", icon: Clock },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setCurrentTab(tab.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-                currentTab === tab.key
-                  ? "bg-purple-600 text-white"
-                  : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
-              }`}
-            >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Filters */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search content..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-slate-900/50 border border-slate-600 text-white pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">All types</option>
-              {contentTypes.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={filterAccess}
-              onChange={(e) => setFilterAccess(e.target.value)}
-              className="bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">All content</option>
-              <option value="accessible">Accessible</option>
-              <option value="restricted">Restricted</option>
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-slate-900/50 border border-slate-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="popular">Most popular</option>
-              <option value="title">By title</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Content Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                <Book className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {contents.length}
-                </p>
-                <p className="text-slate-400 text-sm">Total</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                <Eye className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {contents.filter((c) => c.hasAccess).length}
-                </p>
-                <p className="text-slate-400 text-sm">Accessible</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center">
-                <Heart className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {contents.filter((c) => c.isFavorite).length}
-                </p>
-                <p className="text-slate-400 text-sm">Favorites</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {Math.round(
-                    contents.reduce((acc, c) => acc + (c.views || 0), 0) /
-                      contents.length
-                  ) || 0}
-                </p>
-                <p className="text-slate-400 text-sm">Avg Views</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Content Grid */}
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-purple-400" />
-            {currentTab === "all"
-              ? "All Content"
-              : currentTab === "favorites"
-              ? "Favorites"
-              : currentTab === "accessible"
-              ? "Accessible"
-              : "Recent"}{" "}
-            ({filteredContents.length})
-          </h2>
-
-          {filteredContents.length === 0 ? (
-            <div className="bg-slate-800/30 border border-slate-700/50 rounded-2xl p-12 text-center">
-              <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-slate-400 mb-2">
-                {currentTab === "favorites"
-                  ? "No favorites yet"
-                  : currentTab === "accessible"
-                  ? "No accessible content"
-                  : "No content found"}
-              </h3>
-              <p className="text-slate-500 mb-6">
-                {currentTab === "favorites"
-                  ? "Start favoriting content you like"
-                  : currentTab === "accessible"
-                  ? "Upgrade your plan to access more content"
-                  : "Try adjusting your search filters"}
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <h1
+                style={{
+                  fontSize: '2.25rem',
+                  fontWeight: 900,
+                  color: 'var(--text)',
+                  textTransform: 'uppercase',
+                  margin: '0 0 0.5rem 0',
+                }}
+              >
+                Meu Conteúdo
+              </h1>
+              <p style={{ color: 'var(--text-muted)', margin: 0 }}>
+                Explore e acesse seu conteúdo exclusivo
               </p>
-              {(currentTab === "accessible" || currentTab === "all") && (
-                <button
-                  onClick={() => router.push("/member/plans")}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-2 mx-auto"
-                >
-                  <Crown className="w-5 h-5" />
-                  View Plans
-                </button>
-              )}
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredContents.map((content) => (
-                <ContentCard key={content._id} content={content} />
-              ))}
+
+            {/* Botão de Refresh */}
+            <button
+              onClick={handleRefreshContent}
+              disabled={loading}
+              style={{
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: '10px',
+                color: 'var(--text)',
+                padding: '0.5rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.5 : 1,
+                fontWeight: 600,
+                fontSize: '0.95rem',
+              }}
+              title="Atualizar conteúdo"
+            >
+              <RotateCcw
+                style={{
+                  width: '1rem',
+                  height: '1rem',
+                  animation: loading ? 'spin 0.8s linear infinite' : 'none',
+                }}
+              />
+              Atualizar
+            </button>
+          </div>
+
+          {/* Error Alert */}
+          {error && (
+            <div
+              style={{
+                backgroundColor: 'var(--accent-subtle)',
+                border: '1px solid var(--accent)',
+                borderRadius: '12px',
+                padding: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+              }}
+            >
+              <AlertCircle style={{ width: '1.25rem', height: '1.25rem', color: 'var(--accent)', flexShrink: 0 }} />
+              <p style={{ color: 'var(--accent)', margin: 0 }}>{error}</p>
+              <button
+                onClick={() => setError(null)}
+                style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', padding: 0 }}
+              >
+                <X style={{ width: '1rem', height: '1rem' }} />
+              </button>
             </div>
           )}
+
+          {/* Content Tabs */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setCurrentTab(tab.key)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '10px',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  border: currentTab === tab.key ? 'none' : '1px solid var(--border)',
+                  backgroundColor: currentTab === tab.key ? 'var(--accent)' : 'var(--bg-card)',
+                  color: currentTab === tab.key ? 'white' : 'var(--text-muted)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+              >
+                <tab.icon style={{ width: '1rem', height: '1rem' }} />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Filters */}
+          <div
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: '16px',
+              padding: '1.5rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: '1rem',
+              }}
+            >
+              <div style={{ position: 'relative' }}>
+                <Search
+                  style={{
+                    position: 'absolute',
+                    left: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1.25rem',
+                    height: '1.25rem',
+                    color: 'var(--text-muted)',
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="Buscar conteúdo..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    paddingLeft: '3rem',
+                    paddingRight: '1rem',
+                    paddingTop: '0.75rem',
+                    paddingBottom: '0.75rem',
+                    borderRadius: '10px',
+                    outline: 'none',
+                    fontSize: '0.95rem',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                style={{
+                  backgroundColor: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  outline: 'none',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                <option value="">Todos os tipos</option>
+                {contentTypes.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={filterAccess}
+                onChange={(e) => setFilterAccess(e.target.value)}
+                style={{
+                  backgroundColor: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  outline: 'none',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                <option value="">Todo o conteúdo</option>
+                <option value="accessible">Disponível</option>
+                <option value="restricted">Restrito</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{
+                  backgroundColor: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  outline: 'none',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                <option value="newest">Mais recentes</option>
+                <option value="oldest">Mais antigos</option>
+                <option value="popular">Mais populares</option>
+                <option value="title">Por título</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Content Stats */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {[
+              {
+                value: contents.length,
+                label: 'Total',
+                iconBg: '#3b82f6',
+                Icon: Book,
+              },
+              {
+                value: contents.filter((c) => c.hasAccess).length,
+                label: 'Disponível',
+                iconBg: '#22c55e',
+                Icon: Eye,
+              },
+              {
+                value: contents.filter((c) => c.isFavorite).length,
+                label: 'Favoritos',
+                iconBg: 'var(--accent)',
+                Icon: Heart,
+              },
+              {
+                value:
+                  Math.round(
+                    contents.reduce((acc, c) => acc + (c.views || 0), 0) /
+                      contents.length
+                  ) || 0,
+                label: 'Média de Views',
+                iconBg: 'var(--teal)',
+                Icon: TrendingUp,
+              },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                <div
+                  style={{
+                    width: '3rem',
+                    height: '3rem',
+                    backgroundColor: stat.iconBg,
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <stat.Icon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>
+                    {stat.value}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: 0 }}>{stat.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Content Grid */}
+          <div>
+            <h2
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 800,
+                color: 'var(--text)',
+                marginBottom: '1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                margin: '0 0 1.5rem 0',
+              }}
+            >
+              <FileText style={{ width: '1.5rem', height: '1.5rem', color: 'var(--accent)' }} />
+              {tabLabelMap[currentTab] || 'Todo Conteúdo'} ({filteredContents.length})
+            </h2>
+
+            {filteredContents.length === 0 ? (
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '16px',
+                  padding: '3rem',
+                  textAlign: 'center',
+                }}
+              >
+                <FileText style={{ width: '4rem', height: '4rem', color: 'var(--border)', margin: '0 auto 1rem' }} />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', margin: '0 0 0.5rem 0' }}>
+                  {currentTab === "favorites"
+                    ? "Nenhum favorito ainda"
+                    : currentTab === "accessible"
+                    ? "Sem conteúdo disponível"
+                    : "Nenhum conteúdo encontrado"}
+                </h3>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', margin: '0 0 1.5rem 0' }}>
+                  {currentTab === "favorites"
+                    ? "Comece a favoritar conteúdos"
+                    : currentTab === "accessible"
+                    ? "Assine um plano para acessar mais conteúdo"
+                    : "Tente ajustar os filtros de busca"}
+                </p>
+                {(currentTab === "accessible" || currentTab === "all") && (
+                  <button
+                    onClick={() => router.push("/member/plans")}
+                    style={{
+                      backgroundColor: 'var(--accent)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '0.75rem 1.5rem',
+                      borderRadius: '12px',
+                      fontWeight: 700,
+                      fontSize: '1rem',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                    }}
+                  >
+                    <Crown style={{ width: '1.25rem', height: '1.25rem' }} />
+                    Ver Planos
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                  gap: '1.5rem',
+                }}
+              >
+                {filteredContents.map((content) => (
+                  <ContentCard key={content._id} content={content} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Layout>

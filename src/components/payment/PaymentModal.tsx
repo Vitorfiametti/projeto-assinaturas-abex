@@ -19,7 +19,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   currentPlanId,
   onPaymentSuccess
 }) => {
-  
+
   const [selectedPlan, setSelectedPlan] = useState<IPlan | null>(null);
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly');
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   }, [isOpen]);
 
   // Filter plans based on billing type
-  const availablePlans = Array.isArray(plans) 
+  const availablePlans = Array.isArray(plans)
     ? plans.filter(plan => {
         return billing === 'annual' ? plan.annualPrice : plan.monthlyPrice;
       })
@@ -64,73 +64,91 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-7xl w-full max-h-[95vh] overflow-hidden shadow-2xl border border-slate-700/50">
+    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, zIndex: 50 }}>
+      <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, maxWidth: 900, width: '100%', maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
+
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-700/50 bg-slate-900/50">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 24, borderBottom: '1px solid var(--border)' }}>
           <div>
-            <h2 className="text-3xl font-bold text-white mb-2">Escolher Plano</h2>
-            <p className="text-slate-400 mt-1">Selecione um plano para continuar</p>
+            <h2 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+              Escolher Plano
+            </h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 4 }}>Selecione um plano para continuar</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white"
             disabled={loading}
+            style={{ padding: 8, backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '50%', cursor: loading ? 'not-allowed' : 'pointer', color: 'var(--text)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg style={{ width: 24, height: 24 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Billing Toggle */}
-        <div className="p-6 border-b border-slate-700/50 bg-slate-900/30">
-          <div className="flex items-center justify-center gap-4">
-            <span className={`text-lg font-medium transition-colors ${billing === 'monthly' ? 'text-white' : 'text-slate-500'}`}>
+        <div style={{ padding: 24, borderBottom: '1px solid var(--border)', backgroundColor: 'var(--bg-secondary)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+            <span style={{ fontSize: 16, fontWeight: 500, color: billing === 'monthly' ? 'var(--text)' : 'var(--text-muted)', transition: 'color 0.2s' }}>
               Mensal
             </span>
             <button
               onClick={() => setBilling(billing === 'monthly' ? 'annual' : 'monthly')}
               disabled={loading}
-              className="relative w-16 h-8 bg-slate-700 rounded-full border border-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{
+                position: 'relative', width: 56, height: 28,
+                backgroundColor: billing === 'annual' ? 'var(--teal)' : 'var(--border)',
+                borderRadius: 9999, cursor: loading ? 'not-allowed' : 'pointer',
+                border: 'none', outline: 'none', transition: 'background-color 0.3s ease'
+              }}
             >
-              <span className={`absolute left-1 top-1 w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full shadow-lg transform transition-transform duration-300 ${
-                billing === 'annual' ? 'translate-x-8' : ''
-              }`}></span>
+              <span style={{
+                position: 'absolute',
+                left: 3, top: 3,
+                width: 22, height: 22,
+                backgroundColor: 'white',
+                borderRadius: '50%',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                transform: billing === 'annual' ? 'translateX(28px)' : 'translateX(0)',
+                transition: 'transform 0.3s ease'
+              }} />
             </button>
-            <span className={`text-lg font-medium transition-colors ${billing === 'annual' ? 'text-white' : 'text-slate-500'}`}>
+            <span style={{ fontSize: 16, fontWeight: 500, color: billing === 'annual' ? 'var(--text)' : 'var(--text-muted)', transition: 'color 0.2s' }}>
               Anual
             </span>
-            <div className="px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white text-sm font-medium">
+            <div style={{ padding: '4px 12px', backgroundColor: '#00c9b1', borderRadius: 9999, color: '#ffffff', fontSize: 13, fontWeight: 600 }}>
               Economize 20%
             </div>
           </div>
         </div>
 
         {/* Plans Grid */}
-        <div className="p-6 overflow-y-auto max-h-[60vh]">
+        <div style={{ padding: 24, overflowY: 'auto', maxHeight: '55vh', backgroundColor: '#1a1a1a' }}>
           {availablePlans.length === 0 ? (
-            <div className="text-center py-12">
-              <svg className="w-16 h-16 text-slate-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h3 className="text-xl font-semibold text-white mb-2">Nenhum plano disponível</h3>
-              <p className="text-slate-400">
+            <div style={{ textAlign: 'center', padding: '48px 0' }}>
+              <h3 style={{ fontSize: 18, fontWeight: 600, color: 'white', marginBottom: 8 }}>Nenhum plano disponível</h3>
+              <p style={{ color: '#888', fontSize: 14 }}>
                 Não há planos {billing === 'annual' ? 'anuais' : 'mensais'} disponíveis no momento.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 24,
+              justifyContent: 'center',
+            }}>
               {availablePlans.map((plan, index) => (
-                <PlanCard
-                  key={plan._id.toString()}
-                  plan={plan}
-                  billing={billing}
-                  onSelect={handlePlanSelect}
-                  isPopular={index === 1}
-                  loading={loading}
-                  currentPlanId={currentPlanId}
-                />
+                <div key={plan._id.toString()} style={{ flex: '1 1 280px', maxWidth: 360 }}>
+                  <PlanCard
+                    plan={plan}
+                    billing={billing}
+                    onSelect={handlePlanSelect}
+                    isPopular={index === 1}
+                    loading={loading}
+                    currentPlanId={currentPlanId}
+                  />
+                </div>
               ))}
             </div>
           )}
@@ -138,15 +156,15 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Error Message */}
         {error && (
-          <div className="px-6 pb-4">
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-red-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div style={{ padding: '0 24px 16px' }}>
+            <div style={{ backgroundColor: 'var(--accent-subtle)', border: '1px solid #e8192c', borderRadius: 8, padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <svg style={{ width: 20, height: 20, color: '#e8192c', marginTop: 2 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <h3 className="text-sm font-medium text-red-400">Erro ao processar</h3>
-                  <p className="text-sm text-red-300 mt-1">{error}</p>
+                  <h3 style={{ fontSize: 13, fontWeight: 500, color: '#e8192c' }}>Erro ao processar</h3>
+                  <p style={{ fontSize: 13, color: '#e8192c', marginTop: 4 }}>{error}</p>
                 </div>
               </div>
             </div>
@@ -155,23 +173,23 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Selected Plan Summary */}
         {selectedPlan && (
-          <div className="border-t border-slate-700/50 p-6 bg-slate-900/50">
-            <div className="flex items-center justify-between">
+          <div style={{ borderTop: '1px solid var(--border)', padding: 24, backgroundColor: 'var(--bg-secondary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <h3 className="font-semibold text-white text-lg">{selectedPlan.name}</h3>
-                <p className="text-sm text-slate-400">
-                Faturamento {billing === 'annual' ? 'anual' : 'mensal'}
+                <h3 style={{ fontWeight: 600, color: 'var(--text)', fontSize: 16 }}>{selectedPlan.name}</h3>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
+                  Faturamento {billing === 'annual' ? 'anual' : 'mensal'}
                 </p>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <p className="text-3xl font-bold text-white">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontSize: 28, fontWeight: 700, color: 'var(--teal)' }}>
                     {new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
                       currency: 'BRL'
                     }).format(billing === 'annual' ? selectedPlan.annualPrice! : selectedPlan.monthlyPrice!)}
                   </p>
-                  <p className="text-sm text-slate-400">
+                  <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                     /{billing === 'annual' ? 'ano' : 'mês'}
                   </p>
                 </div>

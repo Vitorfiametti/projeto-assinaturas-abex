@@ -83,19 +83,13 @@ const PayButton: React.FC<PayButtonProps> = ({
     <button
       onClick={handlePayment}
       disabled={disabled || loading}
-      className={`
-        group relative overflow-hidden rounded-lg font-semibold transition-all duration-200 transform
-        ${disabled || loading 
-          ? 'bg-gray-300 cursor-not-allowed text-gray-500' 
-          : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl hover:scale-105'
-        }
-        ${className}
-      `}
+      className={`group relative overflow-hidden rounded-xl font-bold transition-all duration-200 ${className}`}
+      style={
+        disabled || loading
+          ? { backgroundColor: '#333', color: '#666', cursor: 'not-allowed' }
+          : { backgroundColor: 'var(--accent)', color: 'white', boxShadow: '0 4px 14px rgba(232,25,44,0.35)' }
+      }
     >
-      {/* Background Animation */}
-      {!disabled && !loading && (
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      )}
       
       {/* Button Content */}
       <div className="relative px-6 py-3 flex items-center justify-center">

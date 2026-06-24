@@ -129,40 +129,51 @@ async function main() {
     });
 
     const planTiny = await Plan.create({
-      name: "Plano Minimo (R$0.01)",
-      description: "Plano de teste com valor mínimo (sandbox).",
-      price: 0.01,
-      monthlyPrice: 0.01,
-      features: ["Acesso mínimo para testes"],
+      name: "Plano Mensal",
+      description: "Acesso mensal a todos os eventos e benefícios da casa.",
+      price: 30.0,
+      monthlyPrice: 30.0,
+      features: ["Acesso a eventos exclusivos", "Desconto em ingressos", "Suporte prioritário"],
       trialDays: 0,
       isActive: true,
     });
 
     const planSmall = await Plan.create({
-      name: "Plano Pequeno (R$1.00)",
-      description: "Plano de teste com R$1.00 (fallback caso 0.01 seja rejeitado).",
-      price: 1.0,
-      monthlyPrice: 1.0,
-      features: ["Acesso básico"],
+      name: "Plano Semestral",
+      description: "Acesso semestral com desconto especial.",
+      price: 150.0,
+      monthlyPrice: 25.0,
+      features: ["Acesso a eventos exclusivos", "Desconto em produtos", "Suporte prioritário", "Economia de R$30 no semestre"],
+      trialDays: 0,
+      isActive: true,
+    });
+
+    const planAnual = await Plan.create({
+      name: "Plano Anual",
+      description: "Acesso anual com o melhor custo-benefício.",
+      price: 250.0,
+      monthlyPrice: 20.83,
+      annualPrice: 250.0,
+      features: ["Acesso a eventos exclusivos", "Desconto em produtos", "Suporte prioritário", "Economia de R$110 no ano", "Brindes exclusivos"],
       trialDays: 0,
       isActive: true,
     });
 
     const publicContent = await Content.create({
-      title: "Conteúdo Público - Teste",
-      description: "Conteúdo de teste aberto a todos.",
+      title: "Guia de Boas-Vindas à Casa de Eventos",
+      description: "Tudo que você precisa saber para aproveitar ao máximo os benefícios da nossa plataforma.",
       restricted: false,
       planId: null,
-      views: 0,
+      views: 42,
       thumbnailUrl: "",
     });
 
     const restrictedContent = await Content.create({
-      title: "Conteúdo Restrito - Teste",
-      description: "Conteúdo exclusivo para assinantes.",
+      title: "Bastidores: Produção dos Eventos Exclusivos",
+      description: "Conteúdo exclusivo para assinantes — veja como preparamos cada evento, bastidores e dicas dos organizadores.",
       restricted: true,
       planId: planTiny._id,
-      views: 0,
+      views: 18,
       thumbnailUrl: "",
     });
 
@@ -209,43 +220,43 @@ async function main() {
     const baseDate = new Date();
     const events = await Event.insertMany([
       {
-        title: "Churrasco da Atlética",
-        description: "Evento aberto para todos os membros.",
-        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 10, 18, 0),
-        location: "Sede da Atlética",
+        title: "Noite de Gala — Aniversário da Casa",
+        description: "Celebração especial com jantar temático, música ao vivo e surpresas para todos os membros.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 10, 20, 0),
+        location: "Salão Principal — Casa de Eventos Central",
         region: "Sul",
         restricted: false,
       },
       {
-        title: "Torneio de Futsal",
-        description: "Competição interna entre cursos.",
-        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 15, 14, 0),
-        location: "Ginásio Central",
+        title: "Festival Gastronômico",
+        description: "Noite com chefs convidados, degustação de pratos exclusivos e harmonização de bebidas.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 15, 19, 0),
+        location: "Terraço da Casa",
         region: "Sul",
         restricted: false,
       },
       {
-        title: "Workshop de Empreendedorismo",
-        description: "Evento exclusivo para assinantes.",
+        title: "Workshop: Organização de Eventos",
+        description: "Evento exclusivo para assinantes — aprenda os bastidores da produção de eventos de alto padrão com especialistas do setor.",
         date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 20, 9, 0),
-        location: "Auditório Bloco A",
+        location: "Sala VIP — Bloco A",
         region: "Sudeste",
         restricted: true,
         planId: planTiny._id,
       },
       {
-        title: "Festa Junina Universitária",
-        description: "Quadrilha, comidas típicas e muito mais.",
-        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 24, 20, 0),
-        location: "Pátio Central",
+        title: "Festa Temática: Anos 80",
+        description: "Uma noite de nostalgia com playlist retrô, fantasias e muita animação.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 24, 21, 0),
+        location: "Pista Principal",
         region: "Nordeste",
         restricted: false,
       },
       {
-        title: "Semana Acadêmica",
-        description: "Palestras e minicursos durante toda a semana.",
-        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 28, 8, 0),
-        location: "Campus Norte",
+        title: "Encontro de Membros — Networking",
+        description: "Tarde de networking e troca de experiências entre membros da plataforma. Coffee break incluso.",
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), 28, 15, 0),
+        location: "Lounge da Casa",
         region: "Centro-Oeste",
         restricted: false,
       },
@@ -260,7 +271,8 @@ async function main() {
       ],
       plans: [
         { id: planTiny._id, name: planTiny.name, price: planTiny.price },
-        { id: planSmall._id, name: planSmall.name, price: planSmall.price }
+        { id: planSmall._id, name: planSmall.name, price: planSmall.price },
+        { id: planAnual._id, name: planAnual.name, price: planAnual.price }
       ],
       contents: [
         { id: publicContent._id, title: publicContent.title },

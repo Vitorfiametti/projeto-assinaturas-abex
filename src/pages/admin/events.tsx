@@ -130,70 +130,154 @@ function AdminEventsPage() {
 
   if (status === 'loading') return (
     <Layout activeTab="admin-events">
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500" />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div
+          className="animate-spin"
+          style={{
+            width: '3rem',
+            height: '3rem',
+            borderRadius: '9999px',
+            border: '2px solid var(--accent)',
+            borderTopColor: 'transparent',
+          }}
+        />
       </div>
     </Layout>
   );
 
   return (
     <Layout activeTab="admin-events">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '2rem 1rem', background: 'var(--bg)', minHeight: '100vh' }}>
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-              <CalendarDays className="w-5 h-5 text-white" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{
+              width: '2.5rem',
+              height: '2.5rem',
+              borderRadius: '0.75rem',
+              background: 'var(--accent)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <CalendarDays style={{ width: '1.25rem', height: '1.25rem', color: '#ffffff' }} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                color: 'var(--text)',
+                letterSpacing: '0.05em',
+              }}>
                 Gerenciar Eventos
               </h1>
-              <p className="text-slate-400 text-sm">{events.length} evento{events.length !== 1 ? 's' : ''} cadastrado{events.length !== 1 ? 's' : ''}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                {events.length} evento{events.length !== 1 ? 's' : ''} cadastrado{events.length !== 1 ? 's' : ''}
+              </p>
             </div>
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-sm font-medium transition-colors shadow-lg shadow-purple-500/20"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              background: 'var(--accent)',
+              color: '#ffffff',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'opacity 0.2s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
-            <Plus className="w-4 h-4" />
+            <Plus style={{ width: '1rem', height: '1rem' }} />
             Novo Evento
           </button>
         </div>
 
         {/* Alertas */}
         {error && (
-          <div className="mb-4 flex items-center gap-3 bg-red-900/20 border border-red-500/30 rounded-xl p-4">
-            <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
-            <p className="text-red-300 text-sm">{error}</p>
+          <div style={{
+            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            background: 'var(--accent-subtle)',
+            border: '1px solid var(--accent)',
+            borderRadius: '0.75rem',
+            padding: '1rem',
+          }}>
+            <AlertCircle style={{ width: '1.25rem', height: '1.25rem', color: 'var(--accent)', flexShrink: 0 }} />
+            <p style={{ color: 'var(--accent)', fontSize: '0.875rem' }}>{error}</p>
           </div>
         )}
         {success && (
-          <div className="mb-4 flex items-center gap-3 bg-green-900/20 border border-green-500/30 rounded-xl p-4">
-            <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
-            <p className="text-green-300 text-sm">{success}</p>
+          <div style={{
+            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            background: 'var(--teal-subtle)',
+            border: '1px solid var(--teal)',
+            borderRadius: '0.75rem',
+            padding: '1rem',
+          }}>
+            <CheckCircle style={{ width: '1.25rem', height: '1.25rem', color: 'var(--teal)', flexShrink: 0 }} />
+            <p style={{ color: 'var(--teal)', fontSize: '0.875rem' }}>{success}</p>
           </div>
         )}
 
         {/* Filtros */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-2 flex-1 min-w-48">
-            <Search className="w-4 h-4 text-slate-400" />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: '0.75rem',
+            padding: '0.5rem 0.75rem',
+            flex: 1,
+            minWidth: '12rem',
+          }}>
+            <Search style={{ width: '1rem', height: '1rem', color: 'var(--text-muted)' }} />
             <input
               type="text"
               placeholder="Buscar evento..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="bg-transparent text-slate-300 text-sm outline-none w-full placeholder-slate-500"
+              style={{
+                background: 'var(--bg-secondary)',
+                color: 'var(--text)',
+                fontSize: '0.875rem',
+                border: 'none',
+                outline: 'none',
+                width: '100%',
+              }}
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-slate-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Filter style={{ width: '1rem', height: '1rem', color: 'var(--text-muted)' }} />
             <select
               value={filterRegion}
               onChange={e => setFilterRegion(e.target.value)}
-              className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-xl px-3 py-2 outline-none"
+              style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                fontSize: '0.875rem',
+                borderRadius: '0.75rem',
+                padding: '0.5rem 0.75rem',
+                outline: 'none',
+                cursor: 'pointer',
+              }}
             >
               <option value="all">Todas as regiões</option>
               {regions.map(r => <option key={r} value={r}>{r}</option>)}
@@ -203,94 +287,224 @@ function AdminEventsPage() {
 
         {/* Formulário */}
         {showForm && (
-          <div className="mb-6 bg-slate-800/60 border border-purple-500/30 rounded-2xl p-6 shadow-lg shadow-purple-500/10">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-semibold text-white">
+          <div style={{
+            marginBottom: '1.5rem',
+            background: 'var(--bg-card)',
+            border: '2px solid var(--accent)',
+            borderRadius: '1rem',
+            padding: '1.5rem',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)' }}>
                 {editingId ? 'Editar Evento' : 'Novo Evento'}
               </h2>
-              <button onClick={closeForm} className="w-8 h-8 rounded-lg bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors">
-                <X className="w-4 h-4 text-slate-300" />
+              <button
+                onClick={closeForm}
+                style={{
+                  width: '2rem',
+                  height: '2rem',
+                  borderRadius: '0.5rem',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s',
+                }}
+              >
+                <X style={{ width: '1rem', height: '1rem', color: 'var(--text-muted)' }} />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="sm:col-span-2">
-                <label className="text-xs text-slate-400 mb-1 block">Título *</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Título *</label>
                 <input
                   type="text"
                   value={form.title}
                   onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                  placeholder="Ex: Churrasco da Atlética"
-                  className="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors placeholder-slate-500"
+                  placeholder="Ex: Festa de Inauguração"
+                  style={{
+                    width: '100%',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem 1rem',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={e => (e.target.style.borderColor = 'var(--border)')}
                 />
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="text-xs text-slate-400 mb-1 block">Descrição *</label>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Descrição *</label>
                 <textarea
                   value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                   placeholder="Descreva o evento..."
                   rows={3}
-                  className="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors placeholder-slate-500 resize-none"
+                  style={{
+                    width: '100%',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem 1rem',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    resize: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={e => (e.target.style.borderColor = 'var(--border)')}
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Data e Hora *</label>
+                <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Data e Hora *</label>
                 <input
                   type="datetime-local"
                   value={form.date}
                   onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-                  className="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"
+                  style={{
+                    width: '100%',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem 1rem',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={e => (e.target.style.borderColor = 'var(--border)')}
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Região *</label>
+                <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Região *</label>
                 <input
                   type="text"
                   value={form.region}
                   onChange={e => setForm(f => ({ ...f, region: e.target.value }))}
                   placeholder="Ex: Sul, Sudeste, Nordeste..."
-                  className="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors placeholder-slate-500"
+                  style={{
+                    width: '100%',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem 1rem',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={e => (e.target.style.borderColor = 'var(--border)')}
                 />
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="text-xs text-slate-400 mb-1 block">Local *</label>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Local *</label>
                 <input
                   type="text"
                   value={form.location}
                   onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
                   placeholder="Ex: Ginásio Central, Auditório Bloco A..."
-                  className="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors placeholder-slate-500"
+                  style={{
+                    width: '100%',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem 1rem',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={e => (e.target.style.borderColor = 'var(--border)')}
                 />
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="flex items-center gap-3 cursor-pointer">
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
                   <div
                     onClick={() => setForm(f => ({ ...f, restricted: !f.restricted }))}
-                    className={`w-11 h-6 rounded-full transition-colors relative ${form.restricted ? 'bg-purple-600' : 'bg-slate-600'}`}
+                    style={{
+                      width: '2.75rem',
+                      height: '1.5rem',
+                      borderRadius: '9999px',
+                      background: form.restricted ? 'var(--accent)' : 'var(--border)',
+                      position: 'relative',
+                      transition: 'background 0.2s',
+                      cursor: 'pointer',
+                    }}
                   >
-                    <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.restricted ? 'translate-x-6' : 'translate-x-1'}`} />
+                    <div style={{
+                      position: 'absolute',
+                      top: '0.25rem',
+                      width: '1rem',
+                      height: '1rem',
+                      borderRadius: '9999px',
+                      background: '#ffffff',
+                      transition: 'transform 0.2s',
+                      transform: form.restricted ? 'translateX(1.5rem)' : 'translateX(0.25rem)',
+                    }} />
                   </div>
-                  <span className="text-sm text-slate-300">Evento restrito a assinantes</span>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--text)' }}>Evento restrito a assinantes</span>
                 </label>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-5">
-              <button onClick={closeForm} className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors">
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.25rem' }}>
+              <button
+                onClick={closeForm}
+                style={{
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.875rem',
+                  color: 'var(--text-muted)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}
+              >
                 Cancelar
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 px-5 py-2 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white rounded-xl text-sm font-medium transition-colors"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1.25rem',
+                  background: 'var(--accent)',
+                  color: '#ffffff',
+                  borderRadius: '0.75rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  border: 'none',
+                  cursor: saving ? 'not-allowed' : 'pointer',
+                  opacity: saving ? 0.5 : 1,
+                  transition: 'opacity 0.2s',
+                }}
               >
-                <Save className="w-4 h-4" />
+                <Save style={{ width: '1rem', height: '1rem' }} />
                 {saving ? 'Salvando...' : 'Salvar Evento'}
               </button>
             </div>
@@ -299,75 +513,168 @@ function AdminEventsPage() {
 
         {/* Lista de eventos */}
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500" />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '12rem' }}>
+            <div
+              className="animate-spin"
+              style={{
+                width: '2rem',
+                height: '2rem',
+                borderRadius: '9999px',
+                border: '2px solid var(--accent)',
+                borderTopColor: 'transparent',
+              }}
+            />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 py-16 text-center">
-            <CalendarDays className="w-12 h-12 text-slate-600" />
-            <p className="text-slate-400">Nenhum evento encontrado.</p>
-            <button onClick={openCreate} className="text-purple-400 text-sm hover:text-purple-300 underline">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '4rem 0', textAlign: 'center' }}>
+            <CalendarDays style={{ width: '3rem', height: '3rem', color: 'var(--border)' }} />
+            <p style={{ color: 'var(--text-muted)' }}>Nenhum evento encontrado.</p>
+            <button
+              onClick={openCreate}
+              style={{
+                color: 'var(--accent)',
+                fontSize: '0.875rem',
+                textDecoration: 'underline',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
               Criar primeiro evento
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
             {filtered.map(ev => (
-              <div key={ev._id} className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4 hover:border-purple-500/30 transition-all duration-200">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="text-white font-semibold text-sm leading-tight">{ev.title}</h3>
-                  <span className={`shrink-0 flex items-center gap-1 text-xs rounded-full px-2 py-0.5 border ${ev.restricted ? 'bg-orange-900/30 text-orange-300 border-orange-500/30' : 'bg-green-900/30 text-green-300 border-green-500/30'}`}>
-                    {ev.restricted ? <Lock className="w-3 h-3" /> : <Globe className="w-3 h-3" />}
+              <div
+                key={ev._id}
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '1rem',
+                  padding: '1rem',
+                  transition: 'border-color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--teal)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <h3 style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.3 }}>{ev.title}</h3>
+                  <span style={{
+                    flexShrink: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    fontSize: '0.75rem',
+                    borderRadius: '9999px',
+                    padding: '0.125rem 0.5rem',
+                    border: `1px solid ${ev.restricted ? 'var(--accent)' : 'var(--teal)'}`,
+                    background: ev.restricted ? 'var(--accent-subtle)' : 'var(--teal-subtle)',
+                    color: ev.restricted ? 'var(--accent)' : 'var(--teal)',
+                  }}>
+                    {ev.restricted ? <Lock style={{ width: '0.75rem', height: '0.75rem' }} /> : <Globe style={{ width: '0.75rem', height: '0.75rem' }} />}
                     {ev.restricted ? 'Restrito' : 'Público'}
                   </span>
                 </div>
-                <p className="text-slate-400 text-xs mb-3 line-clamp-2">{ev.description}</p>
-                <div className="flex flex-col gap-1 text-xs text-slate-500 mb-4">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-purple-400" />
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.75rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{ev.description}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <Clock style={{ width: '0.75rem', height: '0.75rem', color: 'var(--accent)' }} />
                     {new Date(ev.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     {' · '}
                     {new Date(ev.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-purple-400" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <MapPin style={{ width: '0.75rem', height: '0.75rem', color: 'var(--accent)' }} />
                     {ev.location}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Filter className="w-3 h-3" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <Filter style={{ width: '0.75rem', height: '0.75rem', color: 'var(--text-muted)' }} />
                     {ev.region}
                   </div>
                 </div>
 
                 {confirmDelete === ev._id ? (
-                  <div className="flex gap-2">
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button
                       onClick={() => handleDelete(ev._id)}
-                      className="flex-1 py-1.5 bg-red-600 hover:bg-red-500 text-white text-xs rounded-lg transition-colors"
+                      style={{
+                        flex: 1,
+                        padding: '0.375rem 0',
+                        background: 'var(--accent)',
+                        color: '#ffffff',
+                        fontSize: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'opacity 0.2s',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+                      onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                     >
                       Confirmar exclusão
                     </button>
                     <button
                       onClick={() => setConfirmDelete(null)}
-                      className="flex-1 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded-lg transition-colors"
+                      style={{
+                        flex: 1,
+                        padding: '0.375rem 0',
+                        background: 'var(--bg-secondary)',
+                        color: 'var(--text-muted)',
+                        fontSize: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid var(--border)',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s',
+                      }}
                     >
                       Cancelar
                     </button>
                   </div>
                 ) : (
-                  <div className="flex gap-2">
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button
                       onClick={() => openEdit(ev)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded-lg transition-colors"
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.375rem',
+                        padding: '0.375rem 0',
+                        background: 'var(--bg-secondary)',
+                        color: 'var(--text)',
+                        fontSize: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid var(--border)',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s',
+                      }}
                     >
-                      <Edit3 className="w-3 h-3" />
+                      <Edit3 style={{ width: '0.75rem', height: '0.75rem' }} />
                       Editar
                     </button>
                     <button
                       onClick={() => setConfirmDelete(ev._id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-red-900/30 hover:bg-red-900/50 text-red-400 text-xs rounded-lg border border-red-500/20 transition-colors"
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.375rem',
+                        padding: '0.375rem 0',
+                        background: 'var(--accent-subtle)',
+                        color: 'var(--accent)',
+                        fontSize: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid var(--accent)',
+                        cursor: 'pointer',
+                        transition: 'opacity 0.2s',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
+                      onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 style={{ width: '0.75rem', height: '0.75rem' }} />
                       Excluir
                     </button>
                   </div>
