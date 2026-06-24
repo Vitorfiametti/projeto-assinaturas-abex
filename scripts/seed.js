@@ -2,11 +2,12 @@
 /**
  * Popula o banco com dados de teste:
  * - 1 admin
- * - 2 usuários
+ * - 2 usuários (1 assinante ativo, 1 sem assinatura)
  * - 2 planos (0.01 e 1.00)
  * - 2 conteúdos (1 restrito, 1 público)
- * - 1 assinatura
- * - 2 pagamentos mock (com mercadoPagoId únicos)
+ * - 1 assinatura ativa
+ * - 2 pagamentos mock (mpPaymentId únicos)
+ * - 5 eventos distribuídos por região
  *
  * Uso:
  * NODE_ENV=development MONGODB_URI="mongodb+srv://<user>:<pass>@.../test" node scripts/seed.js
@@ -19,8 +20,8 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/abex-t
 const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
-  role: { type: String, default: "member" },
-  subscriptionStatus: { type: String, default: "Inactive" },
+  role: { type: String, enum: ["admin", "member"], default: "member" },
+  subscriptionStatus: { type: String, enum: ["active", "inactive", "cancelled", "expired"], default: "inactive" },
 }, { timestamps: true });
 
 const planSchema = new mongoose.Schema({
@@ -44,18 +45,18 @@ const contentSchema = new mongoose.Schema({
   thumbnailUrl: String,
 }, { timestamps: true });
 
-// Note: usamos "mercadoPagoId" para bater com o schema do projeto (evita duplicate key null)
+// Alinhado com src/lib/models/Payment.ts — campo correto é "mpPaymentId" (unique)
 const paymentSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan" },
-  mercadoPagoId: { type: String, index: true }, // não definimos unique aqui para evitar erro ao inserir (índice único pode já existir no DB real)
-  amount: Number,
-  status: String,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan", required: true },
+  subscriptionId: { type: mongoose.Schema.Types.ObjectId, ref: "Subscription" },
+  mpPaymentId: { type: String, required: true, unique: true },
+  preferenceId: String,
+  amount: { type: Number, required: true },
+  currency: { type: String, default: "BRL" },
+  status: { type: String, enum: ["pending", "approved", "rejected", "cancelled", "refunded"], default: "pending" },
+  paymentMethod: String,
   paidAt: Date,
-  createdAt: Date,
-  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  ownerName: String,
-  ownerEmail: String,
 }, { timestamps: true });
 
 const eventSchema = new mongoose.Schema({
@@ -69,12 +70,14 @@ const eventSchema = new mongoose.Schema({
   imageUrl: String,
 }, { timestamps: true });
 
+// Alinhado com src/lib/models/Subscription.ts — inclui autoRenew
 const subscriptionSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan" },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan", required: true },
+  status: { type: String, enum: ["pending", "active", "inactive", "cancelled", "expired"], default: "pending" },
   startDate: Date,
   endDate: Date,
-  status: { type: String, default: "active" },
+  autoRenew: { type: Boolean, default: true },
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
@@ -106,21 +109,23 @@ async function main() {
       name: "Admin Teste",
       email: "admin@teste.local",
       role: "admin",
-      subscriptionStatus: "Inactive",
+      subscriptionStatus: "inactive",
     });
 
+    // user1 — assinante ativo (tem assinatura e pagamento aprovado)
     const user1 = await User.create({
       name: "Usuario Teste 1",
       email: "user1@teste.local",
       role: "member",
-      subscriptionStatus: "Inactive",
+      subscriptionStatus: "active",
     });
 
+    // user2 — sem assinatura (pagamento pendente)
     const user2 = await User.create({
       name: "Usuario Teste 2",
       email: "user2@teste.local",
       role: "member",
-      subscriptionStatus: "Inactive",
+      subscriptionStatus: "inactive",
     });
 
     const planTiny = await Plan.create({
@@ -169,35 +174,35 @@ async function main() {
     const subscription1 = await Subscription.create({
       userId: user1._id,
       planId: planSmall._id,
+      status: "active",
       startDate: now,
       endDate: oneMonth,
-      status: "active",
+      autoRenew: true,
     });
 
-    // pagamentos de teste — garantimos mercadoPagoId únicos para não colidir com índice unique existente
+    // pagamentos de teste — campo correto é mpPaymentId (alinhado com Payment.ts)
     const payment1 = await Payment.create({
       userId: user1._id,
       planId: planSmall._id,
-      mercadoPagoId: "TEST-MP-APPROVED-001",
+      subscriptionId: subscription1._id,
+      mpPaymentId: "TEST-MP-APPROVED-001",
+      preferenceId: "TEST-PREF-001",
       amount: 1.0,
+      currency: "BRL",
       status: "approved",
+      paymentMethod: "pix",
       paidAt: new Date(),
-      createdAt: new Date(),
-      ownerId: admin._id,
-      ownerName: admin.name,
-      ownerEmail: admin.email,
     });
 
     const payment2 = await Payment.create({
       userId: user2._id,
       planId: planTiny._id,
-      mercadoPagoId: "TEST-MP-PENDING-002",
+      mpPaymentId: "TEST-MP-PENDING-002",
+      preferenceId: "TEST-PREF-002",
       amount: 0.01,
+      currency: "BRL",
       status: "pending",
-      createdAt: new Date(),
-      ownerId: admin._id,
-      ownerName: admin.name,
-      ownerEmail: admin.email,
+      paymentMethod: "pix",
     });
 
     // eventos de teste distribuídos por região
@@ -263,8 +268,8 @@ async function main() {
       ],
       events: events.map(e => ({ id: e._id, title: e.title, region: e.region, date: e.date })),
       payments: [
-        { id: payment1._id, mercadoPagoId: payment1.mercadoPagoId, amount: payment1.amount, status: payment1.status },
-        { id: payment2._id, mercadoPagoId: payment2.mercadoPagoId, amount: payment2.amount, status: payment2.status }
+        { id: payment1._id, mpPaymentId: payment1.mpPaymentId, amount: payment1.amount, status: payment1.status },
+        { id: payment2._id, mpPaymentId: payment2.mpPaymentId, amount: payment2.amount, status: payment2.status }
       ]
     });
 
